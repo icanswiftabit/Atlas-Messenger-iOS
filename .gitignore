@@ -1,3 +1,6 @@
+# Layer configuration file (has secrets)
+LayerConfiguration.json
+
 Pods
 Releases
 xcodebuild.log
