@@ -26,6 +26,9 @@
 #import "ATLMUtilities.h"
 #import "ATLMParticipantTableViewController.h"
 #import "LYRIdentity+ATLParticipant.h"
+#import <objc/runtime.h>
+#import "ATLMCardCellPresentable.h"
+#import "ATLMCardPresenting.h"
 
 static NSDateFormatter *ATLMShortTimeFormatter()
 {
@@ -127,6 +130,9 @@ static ATLMDateProximity ATLMProximityToDate(NSDate *date)
 }
 
 @interface ATLMConversationViewController () <ATLMConversationDetailViewControllerDelegate, ATLParticipantTableViewControllerDelegate>
+@property (nonatomic, copy, readwrite) NSMutableDictionary<NSString *, Class<ATLMCardCellPesentable>> *factories;
+
+- (nullable NSString *)cardCellFactoryReuseIdentifierForMesssage:(LYRMessage *)message;
 
 @end
 
@@ -162,6 +168,25 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
     if (self.conversation) {
         [self addDetailsButton];
     }
+    
+    NSMutableDictionary *factories = [NSMutableDictionary dictionary];
+    
+    // This will automatically register all the factories in the runtime.
+    unsigned int count = 0;
+    Class *classes = objc_copyClassList(&count);
+    if (NULL != classes) {
+        for (unsigned int i = 0; i < count; i++) {
+            Class clss = classes[i];
+            if (class_conformsToProtocol(clss, @protocol(ATLMCardCellPesentable))) {
+                NSString *identifier = [NSString stringWithFormat:@"%@_%@", NSStringFromClass([self class]), NSStringFromClass(clss)];
+                [self registerClass:[clss collectionViewCellClass] forMessageCellWithReuseIdentifier:identifier];
+                [factories setObject:clss forKey:identifier];
+            }
+        }
+        free(classes);
+    }
+    
+    [self setFactories:factories];
     
     [self configureUserInterfaceAttributes];
     [self registerNotificationObservers];
@@ -248,6 +273,30 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
     if (messagePart) {
         [self presentLocationViewControllerWithMessage:message];
         return;
+    }
+}
+
+- (CGFloat)conversationViewController:(ATLConversationViewController *)viewController heightForMessage:(LYRMessage *)message withCellWidth:(CGFloat)cellWidth
+{
+    CGFloat result = 0.0;
+    
+    NSString *identifier = [self cardCellFactoryReuseIdentifierForMesssage:message];
+    if (identifier != nil) {
+        Class<ATLMCardCellPesentable> factory = [[self factories] objectForKey:identifier];
+        result = [[factory collectionViewCellClass] cellSizeForMessage:message withCellWidth:cellWidth].height;
+    }
+    
+    return result;
+}
+
+- (void)conversationViewController:(ATLConversationViewController *)conversationViewController configureCell:(UICollectionViewCell<ATLMessagePresenting> *)cell forMessage:(LYRMessage *)message
+{
+    if ([cell isKindOfClass:[ATLBaseCollectionViewCell class]]) {
+        
+        ATLBaseCollectionViewCell *abcvc = (ATLBaseCollectionViewCell*)cell;
+        
+        BOOL isOutgoing = [self.layerClient.authenticatedUser.userID isEqualToString:message.sender.userID];
+        [abcvc configureCellForType:(isOutgoing ? ATLOutgoingCellType : ATLIncomingCellType)];
     }
 }
 
@@ -398,6 +447,11 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
         statusString = blockStatusString;
     }
     return [[NSAttributedString alloc] initWithString:statusString attributes:@{NSFontAttributeName : [UIFont boldSystemFontOfSize:11]}];
+}
+
+- (nullable NSString *)conversationViewController:(ATLConversationViewController *)viewController reuseIdentifierForMessage:(LYRMessage *)message
+{
+    return [self cardCellFactoryReuseIdentifierForMesssage:message];
 }
 
 #pragma mark - ATLAddressBarControllerDelegate
@@ -586,6 +640,19 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
         }
     }
     return @"Message";
+}
+
+- (nullable NSString *)cardCellFactoryReuseIdentifierForMesssage:(LYRMessage *)message {
+    
+    NSDictionary<NSString *, Class<ATLMCardCellPesentable>> *factories = [self factories];
+    for (NSString *key in factories) {
+        Class<ATLMCardCellPesentable> factory = [factories objectForKey:key];
+        if ([factory isSupportedMessage:message]) {
+            return key;
+        }
+    }
+    
+    return nil;
 }
 
 #pragma mark - Link Tap Handler
