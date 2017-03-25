@@ -22,6 +22,9 @@ NS_ASSUME_NONNULL_BEGIN     // {
 static const CGFloat ATLMSchedulingCardCollectionViewCellTopPadding = 10.0;
 static const CGFloat ATLMSchedulingCardCollectionViewCellBottomPadding = 17.0;
 static const CGFloat ATLMSchedulingCardCollectionViewCellHorizontalPadding = 13.0;
+static const CGFloat ATLMSchedulingCardCollectionViewCellIconSize = 18.0;
+static const CGFloat ATLMSchedulingCardCollectionViewCellIconHorizontalGap = 11.0;
+static const CGFloat ATLMSchedulingCardCollectionViewCellIconVerticalGap = 11.0;
 static const CGFloat ATLMSchedulingCardCollectionViewCellSeparatorVerticalGap = 10.0;
 static const CGFloat ATLMSchedulingCardCollectionViewCellSeparatorHeight = 1.0;
 static const CGFloat ATLMSchedulingCardCollectionViewCellChoiceButtonHeight = 47.0;
@@ -100,6 +103,7 @@ ATLMSchedulingCardCollectionViewCellDirectionFont(void) {
 
 @interface ATLMSchedulingCardCollectionViewCell () <UICollectionViewDataSource, UICollectionViewDelegate>
 @property (nonatomic, strong, readwrite, nullable) ATLMSchedulingCard *card;
+@property (nonatomic, strong, readonly) UIImageView *icon;
 @property (nonatomic, strong, readonly) UILabel *title;
 @property (nonatomic, strong, readonly) UIView *separator;
 @property (nonatomic, strong, readonly) UICollectionView *choices;
@@ -139,6 +143,10 @@ ATLMSchedulingCardCollectionViewCellDirectionFont(void) {
     
     UIView *content = [self bubbleView];
     
+    _icon = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"SchedulingIcon"] imageWithRenderingMode:(UIImageRenderingModeAlwaysTemplate)]];
+    [_icon setTranslatesAutoresizingMaskIntoConstraints:NO];
+    [content addSubview:_icon];
+    
     _title = [[UILabel alloc] init];
     [_title setTranslatesAutoresizingMaskIntoConstraints:NO];
     [_title setFont:ATLMSchedulingCardCollectionViewCellTitleFont()];
@@ -166,19 +174,23 @@ ATLMSchedulingCardCollectionViewCellDirectionFont(void) {
     [_direction setAlpha:0.3f];
     [content addSubview:_direction];
     
-    NSDictionary *views = NSDictionaryOfVariableBindings(_title, _separator, _choices, _direction);
+    NSDictionary *views = NSDictionaryOfVariableBindings(_icon, _title, _separator, _choices, _direction);
     NSDictionary *metrics = @{@"ATLMSchedulingCardCollectionViewCellTopPadding": @(ATLMSchedulingCardCollectionViewCellTopPadding),
                               @"ATLMSchedulingCardCollectionViewCellHorizontalPadding": @(ATLMSchedulingCardCollectionViewCellHorizontalPadding),
+                              @"ATLMSchedulingCardCollectionViewCellIconSize":@(ATLMSchedulingCardCollectionViewCellIconSize),
+                              @"ATLMSchedulingCardCollectionViewCellIconHorizontalGap":@(ATLMSchedulingCardCollectionViewCellIconHorizontalGap),
+                              @"ATLMSchedulingCardCollectionViewCellIconVerticalGap":@(ATLMSchedulingCardCollectionViewCellIconVerticalGap),
                               @"ATLMSchedulingCardCollectionViewCellSeparatorHeight": @(ATLMSchedulingCardCollectionViewCellSeparatorHeight),
                               @"ATLMSchedulingCardCollectionViewCellSeparatorVerticalGap": @(ATLMSchedulingCardCollectionViewCellSeparatorVerticalGap),
                               @"ATLMSchedulingCardCollectionViewCellChoiceVerticalSpacing": @(ATLMSchedulingCardCollectionViewCellChoiceVerticalSpacing),
                               @"ATLMSchedulingCardCollectionViewCellChoiceBottomPadding": @(ATLMSchedulingCardCollectionViewCellChoiceBottomPadding),
                               @"ATLMSchedulingCardCollectionViewCellBottomPadding": @(ATLMSchedulingCardCollectionViewCellBottomPadding),
                               @"ATLMSchedulingCardCollectionViewCellDirectionHeight": @(ATLMSchedulingCardCollectionViewCellDirectionHeight)};
-    [content addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-ATLMSchedulingCardCollectionViewCellHorizontalPadding-[_title]-ATLMSchedulingCardCollectionViewCellHorizontalPadding-|" options:0 metrics:metrics views:views]];
+    [content addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-ATLMSchedulingCardCollectionViewCellHorizontalPadding-[_icon(ATLMSchedulingCardCollectionViewCellIconSize)]-ATLMSchedulingCardCollectionViewCellIconHorizontalGap-[_title]-ATLMSchedulingCardCollectionViewCellHorizontalPadding-|" options:0 metrics:metrics views:views]];
     [content addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0.0-[_separator]-0.0-|" options:0 metrics:metrics views:views]];
     [content addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-ATLMSchedulingCardCollectionViewCellHorizontalPadding-[_choices]-ATLMSchedulingCardCollectionViewCellHorizontalPadding-|" options:0 metrics:metrics views:views]];
     [content addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-ATLMSchedulingCardCollectionViewCellHorizontalPadding-[_direction]-ATLMSchedulingCardCollectionViewCellHorizontalPadding-|" options:0 metrics:metrics views:views]];
+    [content addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-ATLMSchedulingCardCollectionViewCellIconVerticalGap-[_icon(ATLMSchedulingCardCollectionViewCellIconSize)]" options:0 metrics:metrics views:views]];
     [content addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-ATLMSchedulingCardCollectionViewCellTopPadding-[_title]-ATLMSchedulingCardCollectionViewCellSeparatorVerticalGap-[_separator(ATLMSchedulingCardCollectionViewCellSeparatorHeight)]-ATLMSchedulingCardCollectionViewCellChoiceVerticalSpacing-[_choices]-ATLMSchedulingCardCollectionViewCellChoiceBottomPadding-|" options:0 metrics:metrics views:views]];
     [content addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_direction(ATLMSchedulingCardCollectionViewCellDirectionHeight)]-ATLMSchedulingCardCollectionViewCellBottomPadding-|" options:0 metrics:metrics views:views]];
 }
@@ -258,6 +270,8 @@ ATLMSchedulingCardCollectionViewCellDirectionFont(void) {
     
     [self setBubbleViewColor:bgColor];
     
+    [[self icon] setTintColor:fgColor];
+    
     UILabel *title = [self title];
     [title setBackgroundColor:bgColor];
     [title setTextColor:fgColor];
@@ -333,7 +347,7 @@ ATLMSchedulingCardCollectionViewCellDirectionFont(void) {
         cellWidth = SingleColumnWidth;
     }
     
-    CGSize sz = CGSizeMake(cellWidth, CGFLOAT_MAX);
+    CGSize sz = CGSizeMake(cellWidth - (ATLMSchedulingCardCollectionViewCellIconSize + ATLMSchedulingCardCollectionViewCellIconHorizontalGap), CGFLOAT_MAX);
     CGRect result = CGRectIntegral([title boundingRectWithSize:sz
                                                        options:(NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading)
                                                     attributes:@{NSFontAttributeName:ATLMSchedulingCardCollectionViewCellTitleFont()}
