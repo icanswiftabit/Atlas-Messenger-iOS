@@ -23,6 +23,7 @@
 		0AADB5D01947C8800083732B /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AADB5CF1947C8800083732B /* Security.framework */; };
 		0AADB5D41947C88B0083732B /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AADB5D31947C88B0083732B /* SystemConfiguration.framework */; };
 		0ABEFFAF196B7686006FFFF3 /* logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0ABEFFAE196B7686006FFFF3 /* logo@2x.png */; };
+		1E099A5C1E6E400300C8DA1F /* ATLMCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E099A541E6E400300C8DA1F /* ATLMCard.m */; };
 		251D8DC01A9688C50000BFA2 /* ATLMAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 251D8D851A9688C40000BFA2 /* ATLMAppDelegate.m */; };
 		251D8DC21A9688C50000BFA2 /* ATLMLayerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 251D8D8A1A9688C40000BFA2 /* ATLMLayerController.m */; };
 		251D8DC31A9688C50000BFA2 /* ATLMConversationDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 251D8D8C1A9688C40000BFA2 /* ATLMConversationDetailViewController.m */; };
@@ -108,6 +109,9 @@
 		0AADB5D31947C88B0083732B /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		0AB05019196E24F00029BC1B /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		0ABEFFAE196B7686006FFFF3 /* logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo@2x.png"; sourceTree = "<group>"; };
+		1E099A531E6E400300C8DA1F /* ATLMCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMCard.h; sourceTree = "<group>"; };
+		1E099A541E6E400300C8DA1F /* ATLMCard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMCard.m; sourceTree = "<group>"; };
+		1E099A571E6E400300C8DA1F /* ATLMCardSubclass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMCardSubclass.h; sourceTree = "<group>"; };
 		251D8D841A9688C40000BFA2 /* ATLMAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMAppDelegate.h; sourceTree = "<group>"; };
 		251D8D851A9688C40000BFA2 /* ATLMAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMAppDelegate.m; sourceTree = "<group>"; };
 		251D8D891A9688C40000BFA2 /* ATLMLayerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMLayerController.h; sourceTree = "<group>"; };
@@ -444,6 +448,9 @@
 		AA441A911DD4D90300F93295 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				1E099A531E6E400300C8DA1F /* ATLMCard.h */,
+				1E099A541E6E400300C8DA1F /* ATLMCard.m */,
+				1E099A571E6E400300C8DA1F /* ATLMCardSubclass.h */,
 				AA441A941DD4D96900F93295 /* ATLMUserCredentials.h */,
 				AA441A921DD4D94D00F93295 /* ATLMUserCredentials.m */,
 			);
@@ -766,6 +773,7 @@
 				251D8DC41A9688C50000BFA2 /* ATLMConversationListViewController.m in Sources */,
 				251D8DD81A9688C50000BFA2 /* ATLMSettingsHeaderView.m in Sources */,
 				408588481E3C097700C7831C /* main.m in Sources */,
+				1E099A5C1E6E400300C8DA1F /* ATLMCard.m in Sources */,
 				251D8DD41A9688C50000BFA2 /* ATLMUtilities.m in Sources */,
 				AA441A931DD4D94D00F93295 /* ATLMUserCredentials.m in Sources */,
 				251D8DD01A9688C50000BFA2 /* ATLMErrors.m in Sources */,
