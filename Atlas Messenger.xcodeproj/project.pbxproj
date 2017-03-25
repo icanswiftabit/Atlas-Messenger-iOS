@@ -24,6 +24,10 @@
 		0AADB5D41947C88B0083732B /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AADB5D31947C88B0083732B /* SystemConfiguration.framework */; };
 		0ABEFFAF196B7686006FFFF3 /* logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0ABEFFAE196B7686006FFFF3 /* logo@2x.png */; };
 		1E099A5C1E6E400300C8DA1F /* ATLMCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E099A541E6E400300C8DA1F /* ATLMCard.m */; };
+		1E8D72241E862EB2000E058A /* ATLMSchedulingCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E8D72211E862EB2000E058A /* ATLMSchedulingCard.m */; };
+		1E8D72251E862EB2000E058A /* ATLMSchedulingCardCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E8D72231E862EB2000E058A /* ATLMSchedulingCardCollectionViewCell.m */; };
+		1E8D722C1E862F1A000E058A /* ATLMTextPollCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E8D72291E862F1A000E058A /* ATLMTextPollCard.m */; };
+		1E8D722D1E862F1A000E058A /* ATLMTextPollCardCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E8D722B1E862F1A000E058A /* ATLMTextPollCardCollectionViewCell.m */; };
 		251D8DC01A9688C50000BFA2 /* ATLMAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 251D8D851A9688C40000BFA2 /* ATLMAppDelegate.m */; };
 		251D8DC21A9688C50000BFA2 /* ATLMLayerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 251D8D8A1A9688C40000BFA2 /* ATLMLayerController.m */; };
 		251D8DC31A9688C50000BFA2 /* ATLMConversationDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 251D8D8C1A9688C40000BFA2 /* ATLMConversationDetailViewController.m */; };
@@ -112,6 +116,14 @@
 		1E099A531E6E400300C8DA1F /* ATLMCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMCard.h; sourceTree = "<group>"; };
 		1E099A541E6E400300C8DA1F /* ATLMCard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMCard.m; sourceTree = "<group>"; };
 		1E099A571E6E400300C8DA1F /* ATLMCardSubclass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMCardSubclass.h; sourceTree = "<group>"; };
+		1E8D72201E862EB2000E058A /* ATLMSchedulingCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMSchedulingCard.h; sourceTree = "<group>"; };
+		1E8D72211E862EB2000E058A /* ATLMSchedulingCard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMSchedulingCard.m; sourceTree = "<group>"; };
+		1E8D72221E862EB2000E058A /* ATLMSchedulingCardCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMSchedulingCardCollectionViewCell.h; sourceTree = "<group>"; };
+		1E8D72231E862EB2000E058A /* ATLMSchedulingCardCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMSchedulingCardCollectionViewCell.m; sourceTree = "<group>"; };
+		1E8D72281E862F1A000E058A /* ATLMTextPollCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMTextPollCard.h; sourceTree = "<group>"; };
+		1E8D72291E862F1A000E058A /* ATLMTextPollCard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMTextPollCard.m; sourceTree = "<group>"; };
+		1E8D722A1E862F1A000E058A /* ATLMTextPollCardCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMTextPollCardCollectionViewCell.h; sourceTree = "<group>"; };
+		1E8D722B1E862F1A000E058A /* ATLMTextPollCardCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMTextPollCardCollectionViewCell.m; sourceTree = "<group>"; };
 		1E9B4ACB1E7990E200B8BBAB /* ATLMCardCellPresentable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMCardCellPresentable.h; sourceTree = "<group>"; };
 		1E9B4ACF1E79E20000B8BBAB /* ATLMCardPresenting.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ATLMCardPresenting.h; sourceTree = "<group>"; };
 		251D8D841A9688C40000BFA2 /* ATLMAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMAppDelegate.h; sourceTree = "<group>"; };
@@ -308,6 +320,38 @@
 			path = Icons;
 			sourceTree = "<group>";
 		};
+		1E8D72261E862EBB000E058A /* SchedulingCard */ = {
+			isa = PBXGroup;
+			children = (
+				1E8D72201E862EB2000E058A /* ATLMSchedulingCard.h */,
+				1E8D72211E862EB2000E058A /* ATLMSchedulingCard.m */,
+				1E8D72221E862EB2000E058A /* ATLMSchedulingCardCollectionViewCell.h */,
+				1E8D72231E862EB2000E058A /* ATLMSchedulingCardCollectionViewCell.m */,
+			);
+			path = SchedulingCard;
+			sourceTree = "<group>";
+		};
+		1E8D72271E862ED2000E058A /* Cards */ = {
+			isa = PBXGroup;
+			children = (
+				1E8D722E1E862F22000E058A /* TextPoll */,
+				1E8D72261E862EBB000E058A /* SchedulingCard */,
+			);
+			path = Cards;
+			sourceTree = "<group>";
+		};
+		1E8D722E1E862F22000E058A /* TextPoll */ = {
+			isa = PBXGroup;
+			children = (
+				1E8D72281E862F1A000E058A /* ATLMTextPollCard.h */,
+				1E8D72291E862F1A000E058A /* ATLMTextPollCard.m */,
+				1E8D722A1E862F1A000E058A /* ATLMTextPollCardCollectionViewCell.h */,
+				1E8D722B1E862F1A000E058A /* ATLMTextPollCardCollectionViewCell.m */,
+			);
+			name = TextPoll;
+			path = TextPollCard;
+			sourceTree = "<group>";
+		};
 		251D8D861A9688C40000BFA2 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -380,6 +424,7 @@
 		259A57111950EB76000E27B0 /* Code */ = {
 			isa = PBXGroup;
 			children = (
+				1E8D72271E862ED2000E058A /* Cards */,
 				251D8D861A9688C40000BFA2 /* Controllers */,
 				0A0C242519477D8F00401B74 /* Frameworks */,
 				AA441A911DD4D90300F93295 /* Models */,
@@ -760,6 +805,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1E8D72251E862EB2000E058A /* ATLMSchedulingCardCollectionViewCell.m in Sources */,
 				4085884F1E3C0A9000C7831C /* ATLMAuthenticationProvider.m in Sources */,
 				D016D0FC1D20D9D900D9AA4F /* ATLMApplicationViewController.m in Sources */,
 				251D8DC21A9688C50000BFA2 /* ATLMLayerController.m in Sources */,
@@ -769,12 +815,15 @@
 				251D8DC51A9688C50000BFA2 /* ATLMConversationViewController.m in Sources */,
 				251D8DD91A9688C50000BFA2 /* ATLMSplashView.m in Sources */,
 				251D8DC01A9688C50000BFA2 /* ATLMAppDelegate.m in Sources */,
+				1E8D722D1E862F1A000E058A /* ATLMTextPollCardCollectionViewCell.m in Sources */,
 				251D8DC61A9688C50000BFA2 /* ATLMMediaViewController.m in Sources */,
 				251D8DCF1A9688C50000BFA2 /* ATLMConstants.m in Sources */,
 				AA1DC2791E3C05060034CFD5 /* ATLMLocationViewController.m in Sources */,
 				251D8DDA1A9688C50000BFA2 /* ATLMStyleValue1TableViewCell.m in Sources */,
+				1E8D72241E862EB2000E058A /* ATLMSchedulingCard.m in Sources */,
 				251D8DC81A9688C50000BFA2 /* ATLMParticipantTableViewController.m in Sources */,
 				251D8DC41A9688C50000BFA2 /* ATLMConversationListViewController.m in Sources */,
+				1E8D722C1E862F1A000E058A /* ATLMTextPollCard.m in Sources */,
 				251D8DD81A9688C50000BFA2 /* ATLMSettingsHeaderView.m in Sources */,
 				408588481E3C097700C7831C /* main.m in Sources */,
 				1E099A5C1E6E400300C8DA1F /* ATLMCard.m in Sources */,
