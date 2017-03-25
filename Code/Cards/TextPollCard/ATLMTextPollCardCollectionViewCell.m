@@ -22,6 +22,9 @@ NS_ASSUME_NONNULL_BEGIN     // {
 static const CGFloat ATLMTextPollCardCollectionViewCellTopPadding = 10.0;
 static const CGFloat ATLMTextPollCardCollectionViewCellBottomPadding = 17.0;
 static const CGFloat ATLMTextPollCardCollectionViewCellHorizontalPadding = 13.0;
+static const CGFloat ATLMTextPollCardCollectionViewCellIconSize = 18.0;
+static const CGFloat ATLMTextPollCardCollectionViewCellIconHorizontalGap = 11.0;
+static const CGFloat ATLMTextPollCardCollectionViewCellIconVerticalGap = 11.0;
 static const CGFloat ATLMTextPollCardCollectionViewCellSeparatorVerticalGap = 10.0;
 static const CGFloat ATLMTextPollCardCollectionViewCellSeparatorHeight = 1.0;
 static const CGFloat ATLMTextPollCardCollectionViewCellChoiceHeight = 48.0;
@@ -98,6 +101,7 @@ ATLMTextPollCardCollectionViewCellDirectionFont(void) {
 
 @interface ATLMTextPollCardCollectionViewCell () <UITableViewDataSource, UITableViewDelegate>
 @property (nonatomic, strong, readwrite, nullable) ATLMTextPollCard *card;
+@property (nonatomic, strong, readonly) UIImageView *icon;
 @property (nonatomic, strong, readonly) UILabel *question;
 @property (nonatomic, strong, readonly) UIView *separator;
 @property (nonatomic, strong, readonly) UITableView *choices;
@@ -137,6 +141,10 @@ ATLMTextPollCardCollectionViewCellDirectionFont(void) {
     
     UIView *content = [self bubbleView];
     
+    _icon = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"TextPollIcon"] imageWithRenderingMode:(UIImageRenderingModeAlwaysTemplate)]];
+    [_icon setTranslatesAutoresizingMaskIntoConstraints:NO];
+    [content addSubview:_icon];
+    
     _question = [[UILabel alloc] init];
     [_question setTranslatesAutoresizingMaskIntoConstraints:NO];
     [_question setFont:ATLMTextPollCardCollectionViewCellQuestionFont()];
@@ -164,18 +172,22 @@ ATLMTextPollCardCollectionViewCellDirectionFont(void) {
     [_direction setAlpha:0.3f];
     [content addSubview:_direction];
 
-    NSDictionary *views = NSDictionaryOfVariableBindings(_question, _separator, _choices, _direction);
+    NSDictionary *views = NSDictionaryOfVariableBindings(_icon, _question, _separator, _choices, _direction);
     NSDictionary *metrics = @{@"ATLMTextPollCardCollectionViewCellTopPadding": @(ATLMTextPollCardCollectionViewCellTopPadding),
                               @"ATLMTextPollCardCollectionViewCellHorizontalPadding": @(ATLMTextPollCardCollectionViewCellHorizontalPadding),
+                              @"ATLMTextPollCardCollectionViewCellIconSize":@(ATLMTextPollCardCollectionViewCellIconSize),
+                              @"ATLMTextPollCardCollectionViewCellIconHorizontalGap":@(ATLMTextPollCardCollectionViewCellIconHorizontalGap),
+                              @"ATLMTextPollCardCollectionViewCellIconVerticalGap":@(ATLMTextPollCardCollectionViewCellIconVerticalGap),
                               @"ATLMTextPollCardCollectionViewCellSeparatorHeight": @(ATLMTextPollCardCollectionViewCellSeparatorHeight),
                               @"ATLMTextPollCardCollectionViewCellSeparatorVerticalGap": @(ATLMTextPollCardCollectionViewCellSeparatorVerticalGap),
                               @"ATLMTextPollCardCollectionViewCellChoiceBottomPadding": @(ATLMTextPollCardCollectionViewCellChoiceBottomPadding),
                               @"ATLMTextPollCardCollectionViewCellBottomPadding": @(ATLMTextPollCardCollectionViewCellBottomPadding),
                               @"ATLMTextPollCardCollectionViewCellDirectionHeight": @(ATLMTextPollCardCollectionViewCellDirectionHeight)};
-    [content addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-ATLMTextPollCardCollectionViewCellHorizontalPadding-[_question]-ATLMTextPollCardCollectionViewCellHorizontalPadding-|" options:0 metrics:metrics views:views]];
+    [content addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-ATLMTextPollCardCollectionViewCellHorizontalPadding-[_icon(ATLMTextPollCardCollectionViewCellIconSize)]-ATLMTextPollCardCollectionViewCellIconHorizontalGap-[_question]-ATLMTextPollCardCollectionViewCellHorizontalPadding-|" options:0 metrics:metrics views:views]];
     [content addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0.0-[_separator]-0.0-|" options:0 metrics:metrics views:views]];
     [content addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-ATLMTextPollCardCollectionViewCellHorizontalPadding-[_choices]-ATLMTextPollCardCollectionViewCellHorizontalPadding-|" options:0 metrics:metrics views:views]];
     [content addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-ATLMTextPollCardCollectionViewCellHorizontalPadding-[_direction]-ATLMTextPollCardCollectionViewCellHorizontalPadding-|" options:0 metrics:metrics views:views]];
+    [content addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-ATLMTextPollCardCollectionViewCellIconVerticalGap-[_icon(ATLMTextPollCardCollectionViewCellIconSize)]" options:0 metrics:metrics views:views]];
     [content addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-ATLMTextPollCardCollectionViewCellTopPadding-[_question]-ATLMTextPollCardCollectionViewCellSeparatorVerticalGap-[_separator(ATLMTextPollCardCollectionViewCellSeparatorHeight)]-0-[_choices]-ATLMTextPollCardCollectionViewCellChoiceBottomPadding-|" options:0 metrics:metrics views:views]];
     [content addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_direction(ATLMTextPollCardCollectionViewCellDirectionHeight)]-ATLMTextPollCardCollectionViewCellBottomPadding-|" options:0 metrics:metrics views:views]];
 }
@@ -252,6 +264,8 @@ ATLMTextPollCardCollectionViewCellDirectionFont(void) {
     
     [self setBubbleViewColor:bgColor];
     
+    [[self icon] setTintColor:fgColor];
+    
     UILabel *question = [self question];
     [question setBackgroundColor:bgColor];
     [question setTextColor:fgColor];
@@ -300,7 +314,8 @@ ATLMTextPollCardCollectionViewCellDirectionFont(void) {
     ATLMTextPollCard *card = [ATLMTextPollCard cardWithMessage:message];
     NSString *question = [card question];
     
-    CGSize sz = CGSizeMake(MIN(ATLMaxCellWidth(), cellWidth), CGFLOAT_MAX);
+    CGSize sz = CGSizeMake(cellWidth, CGFLOAT_MAX);
+    sz.width -= (ATLMTextPollCardCollectionViewCellIconSize + ATLMTextPollCardCollectionViewCellIconHorizontalGap);
     CGRect result = CGRectIntegral([question boundingRectWithSize:sz
                                                           options:(NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading)
                                                        attributes:@{NSFontAttributeName:ATLMTextPollCardCollectionViewCellQuestionFont()}
@@ -312,7 +327,9 @@ ATLMTextPollCardCollectionViewCellDirectionFont(void) {
                            ATLMTextPollCardCollectionViewCellChoiceSpacing +
                            (ATLMTextPollCardCollectionViewCellChoiceHeight * [[card choices] count]) +
                            ATLMTextPollCardCollectionViewCellChoiceBottomPadding);
-    result.size.width += (2.0 * ATLMTextPollCardCollectionViewCellHorizontalPadding);
+    result.size.width += ((2.0 * ATLMTextPollCardCollectionViewCellHorizontalPadding) +
+                          ATLMTextPollCardCollectionViewCellIconSize +
+                          ATLMTextPollCardCollectionViewCellIconHorizontalGap);
 
     return result.size;
 }

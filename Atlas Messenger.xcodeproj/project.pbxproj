@@ -24,6 +24,9 @@
 		0AADB5D41947C88B0083732B /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AADB5D31947C88B0083732B /* SystemConfiguration.framework */; };
 		0ABEFFAF196B7686006FFFF3 /* logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0ABEFFAE196B7686006FFFF3 /* logo@2x.png */; };
 		1E099A5C1E6E400300C8DA1F /* ATLMCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E099A541E6E400300C8DA1F /* ATLMCard.m */; };
+		1E4999AD1E86E83C0022D886 /* TextPollIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 1E4999AA1E86E83C0022D886 /* TextPollIcon.png */; };
+		1E4999AE1E86E83C0022D886 /* TextPollIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1E4999AB1E86E83C0022D886 /* TextPollIcon@2x.png */; };
+		1E4999AF1E86E83C0022D886 /* TextPollIcon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1E4999AC1E86E83C0022D886 /* TextPollIcon@3x.png */; };
 		1E8D72241E862EB2000E058A /* ATLMSchedulingCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E8D72211E862EB2000E058A /* ATLMSchedulingCard.m */; };
 		1E8D72251E862EB2000E058A /* ATLMSchedulingCardCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E8D72231E862EB2000E058A /* ATLMSchedulingCardCollectionViewCell.m */; };
 		1E8D722C1E862F1A000E058A /* ATLMTextPollCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E8D72291E862F1A000E058A /* ATLMTextPollCard.m */; };
@@ -116,6 +119,9 @@
 		1E099A531E6E400300C8DA1F /* ATLMCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMCard.h; sourceTree = "<group>"; };
 		1E099A541E6E400300C8DA1F /* ATLMCard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMCard.m; sourceTree = "<group>"; };
 		1E099A571E6E400300C8DA1F /* ATLMCardSubclass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMCardSubclass.h; sourceTree = "<group>"; };
+		1E4999AA1E86E83C0022D886 /* TextPollIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TextPollIcon.png; sourceTree = "<group>"; };
+		1E4999AB1E86E83C0022D886 /* TextPollIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TextPollIcon@2x.png"; sourceTree = "<group>"; };
+		1E4999AC1E86E83C0022D886 /* TextPollIcon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TextPollIcon@3x.png"; sourceTree = "<group>"; };
 		1E8D72201E862EB2000E058A /* ATLMSchedulingCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMSchedulingCard.h; sourceTree = "<group>"; };
 		1E8D72211E862EB2000E058A /* ATLMSchedulingCard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMSchedulingCard.m; sourceTree = "<group>"; };
 		1E8D72221E862EB2000E058A /* ATLMSchedulingCardCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMSchedulingCardCollectionViewCell.h; sourceTree = "<group>"; };
@@ -320,6 +326,16 @@
 			path = Icons;
 			sourceTree = "<group>";
 		};
+		1E4999A91E86E83C0022D886 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				1E4999AA1E86E83C0022D886 /* TextPollIcon.png */,
+				1E4999AB1E86E83C0022D886 /* TextPollIcon@2x.png */,
+				1E4999AC1E86E83C0022D886 /* TextPollIcon@3x.png */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		1E8D72261E862EBB000E058A /* SchedulingCard */ = {
 			isa = PBXGroup;
 			children = (
@@ -347,6 +363,7 @@
 				1E8D72291E862F1A000E058A /* ATLMTextPollCard.m */,
 				1E8D722A1E862F1A000E058A /* ATLMTextPollCardCollectionViewCell.h */,
 				1E8D722B1E862F1A000E058A /* ATLMTextPollCardCollectionViewCell.m */,
+				1E4999A91E86E83C0022D886 /* Resources */,
 			);
 			name = TextPoll;
 			path = TextPollCard;
@@ -676,12 +693,15 @@
 				D62611711A98153C00F6E707 /* layer-logo-gray.png in Resources */,
 				408588511E3C0B7800C7831C /* LayerConfiguration.json in Resources */,
 				D633684F1A9D614900FBFCD3 /* atlas-splashscreen-1334.png in Resources */,
+				1E4999AF1E86E83C0022D886 /* TextPollIcon@3x.png in Resources */,
 				D62611721A98153C00F6E707 /* layer-logo-gray@3x.png in Resources */,
 				0ABEFFAF196B7686006FFFF3 /* logo@2x.png in Resources */,
+				1E4999AD1E86E83C0022D886 /* TextPollIcon.png in Resources */,
 				D62D17371A9C267C00E0EFAF /* Launch Screen.xib in Resources */,
 				D63368501A9D614900FBFCD3 /* atlas-splashscreen-1336.png in Resources */,
 				D62D17351A9C22E100E0EFAF /* Images.xcassets in Resources */,
 				D626116A1A98091800F6E707 /* layer-logo.png in Resources */,
+				1E4999AE1E86E83C0022D886 /* TextPollIcon@2x.png in Resources */,
 				259A57741950EB83000E27B0 /* InfoPlist.strings in Resources */,
 				D62611731A98153C00F6E707 /* layer-logo-gray@2x.png in Resources */,
 				D626116B1A98091800F6E707 /* layer-logo@3x.png in Resources */,
