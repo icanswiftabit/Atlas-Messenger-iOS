@@ -112,6 +112,8 @@
 		1E099A531E6E400300C8DA1F /* ATLMCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMCard.h; sourceTree = "<group>"; };
 		1E099A541E6E400300C8DA1F /* ATLMCard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMCard.m; sourceTree = "<group>"; };
 		1E099A571E6E400300C8DA1F /* ATLMCardSubclass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMCardSubclass.h; sourceTree = "<group>"; };
+		1E9B4ACB1E7990E200B8BBAB /* ATLMCardCellPresentable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMCardCellPresentable.h; sourceTree = "<group>"; };
+		1E9B4ACF1E79E20000B8BBAB /* ATLMCardPresenting.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ATLMCardPresenting.h; sourceTree = "<group>"; };
 		251D8D841A9688C40000BFA2 /* ATLMAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMAppDelegate.h; sourceTree = "<group>"; };
 		251D8D851A9688C40000BFA2 /* ATLMAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMAppDelegate.m; sourceTree = "<group>"; };
 		251D8D891A9688C40000BFA2 /* ATLMLayerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMLayerController.h; sourceTree = "<group>"; };
@@ -515,6 +517,8 @@
 			isa = PBXGroup;
 			children = (
 				408588491E3C09B400C7831C /* ATLMAuthenticating.h */,
+				1E9B4ACB1E7990E200B8BBAB /* ATLMCardCellPresentable.h */,
+				1E9B4ACF1E79E20000B8BBAB /* ATLMCardPresenting.h */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
