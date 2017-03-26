@@ -42,7 +42,12 @@ static const CGFloat ATLMTextPollCardCollectionViewCellDirectionFontSize = 13.0;
 #endif
 
 @interface ATLMTextPollCardChoiceViewCell : UITableViewCell
-@property (nonatomic, strong, readwrite) UILabel *choice;
+@property (nonatomic, strong, readwrite) UIButton *choice;
+@property (nonatomic, weak, readwrite, nullable) id target;
+@property (nonatomic, assign, readwrite, nullable) SEL action;
+
+- (void)performSelection:(id)sender;
+
 @end
 
 
@@ -109,6 +114,8 @@ ATLMTextPollCardCollectionViewCellDirectionFont(void) {
 @property (nonatomic, assign, readwrite) ATLCellType type;
 
 - (void)lyr_CommonInit;
+
+- (void)sendResponse:(id)sender;
 
 @end
 
@@ -349,16 +356,26 @@ ATLMTextPollCardCollectionViewCellDirectionFont(void) {
     NSString *choice = [[[self card] choices] objectAtIndex:[indexPath row]];
     
     ATLCellType type = [self type];
-    UILabel *label = [result choice];
-    [label setTextColor:ATLBlueColor()];
-    [label setText:choice];
-    [label setBackgroundColor:ATLMTextPollCardCollectionViewCellChoiceButtonBackgroundColor(type)];
+    UIButton *button = [result choice];
+    [button setAttributedTitle:[[NSAttributedString alloc] initWithString:choice
+                                                               attributes:@{NSFontAttributeName:ATLMTextPollCardCollectionViewCellChoiceFont(),
+                                                                            NSForegroundColorAttributeName:ATLBlueColor()}]
+                      forState:(UIControlStateNormal)];
+    [button setBackgroundColor:ATLMTextPollCardCollectionViewCellChoiceButtonBackgroundColor(type)];
     
     [result setBackgroundColor:((ATLOutgoingCellType == type) ? ATLBlueColor() : ATLLightGrayColor())];
     
     [result setSelectionStyle:(UITableViewCellSelectionStyleNone)];
     
+    [result setTarget:self];
+    [result setAction:@selector(sendResponse:)];
+    [result setTag:[indexPath row]];
+    
     return result;
+}
+
+- (void)sendResponse:(id)sender {
+    
 }
 
 #if 0
@@ -388,12 +405,11 @@ ATLMTextPollCardCollectionViewCellDirectionFont(void) {
         
         UIView *content = [self contentView];
         
-        _choice = [[UILabel alloc] init];
+        _choice = [UIButton buttonWithType:(UIButtonTypeSystem)];
         [_choice setTranslatesAutoresizingMaskIntoConstraints:NO];
-        [_choice setFont:ATLMTextPollCardCollectionViewCellChoiceFont()];
-        [_choice setTextAlignment:(NSTextAlignmentCenter)];
         [_choice setClipsToBounds:YES];
         [[_choice layer] setCornerRadius:4.0];
+        [_choice addTarget:self action:@selector(performSelection:) forControlEvents:UIControlEventTouchUpInside];
         [content addSubview:_choice];
         
         [[NSLayoutConstraint constraintWithItem:_choice attribute:(NSLayoutAttributeLeft) relatedBy:(NSLayoutRelationEqual) toItem:content attribute:(NSLayoutAttributeLeft) multiplier:1.0 constant:0.0] setActive:YES];
@@ -402,6 +418,27 @@ ATLMTextPollCardCollectionViewCellDirectionFont(void) {
     }
     
     return self;
+}
+
+- (void)prepareForReuse {
+    [super prepareForReuse];
+    [self setTarget:nil];
+    [self setAction:nil];
+}
+
+- (void)performSelection:(id)sender {
+    
+    id target = [self target];
+    SEL action = [self action];
+    
+    if ((nil != target) && (NULL != action)) {
+        sender = self;
+        NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:[target methodSignatureForSelector:action]];
+        [invocation setTarget:target];
+        [invocation setSelector:action];
+        [invocation setArgument:&sender atIndex:2];
+        [invocation invoke];
+    }
 }
 
 @end

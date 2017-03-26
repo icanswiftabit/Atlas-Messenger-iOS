@@ -43,8 +43,14 @@ static const CGFloat ATLMSchedulingCardCollectionViewCellDirectionFontSize = 13.
 #endif
 
 @interface ATLMSchedulingCardChoiceViewCell : UICollectionViewCell
-@property (nonatomic, strong, readwrite) UILabel *choice;
+@property (nonatomic, strong, readwrite) UIButton *choice;
+@property (nonatomic, weak, readwrite, nullable) id target;
+@property (nonatomic, assign, readwrite, nullable) SEL action;
+
 + (NSString*)reuseIdentifier;
+
+- (void)performSelection:(id)sender;
+
 @end
 
 
@@ -111,6 +117,8 @@ ATLMSchedulingCardCollectionViewCellDirectionFont(void) {
 @property (nonatomic, assign, readwrite) ATLCellType type;
 
 - (void)lyr_CommonInit;
+
+- (void)sendResponse:(id)sender;
 
 @end
 
@@ -386,14 +394,31 @@ ATLMSchedulingCardCollectionViewCellDirectionFont(void) {
     NSString *end = [NSDateFormatter localizedStringFromDate:[range endDate] dateStyle:NSDateFormatterNoStyle timeStyle:NSDateFormatterShortStyle];
     
     ATLCellType type = [self type];
-    UILabel *label = [result choice];
-    [label setTextColor:ATLBlueColor()];
-    [label setText:[NSString stringWithFormat:@"%@\n%@ - %@", day, time, end]];
-    [label setBackgroundColor:ATLMSchedulingCardCollectionViewCellChoiceButtonBackgroundColor(type)];
+    UIButton *button = [result choice];
+    
+    NSMutableParagraphStyle *style = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+    [style setAlignment:(NSTextAlignmentCenter)];
+    [button setAttributedTitle:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\n%@ - %@", day, time, end]
+                                                               attributes:@{NSFontAttributeName:ATLMSchedulingCardCollectionViewCellChoiceFont(),
+                                                                            NSForegroundColorAttributeName:ATLBlueColor(),
+                                                                            NSParagraphStyleAttributeName:style}]
+                      forState:(UIControlStateNormal)];
+    
+    [button setNeedsLayout];
+    
+    [button setBackgroundColor:ATLMSchedulingCardCollectionViewCellChoiceButtonBackgroundColor(type)];
     
     [result setBackgroundColor:((ATLOutgoingCellType == type) ? ATLBlueColor() : ATLLightGrayColor())];
     
+    [result setTarget:self];
+    [result setAction:@selector(sendResponse:)];
+    [result setTag:[indexPath row]];
+    
     return result;
+}
+
+- (void)sendResponse:(id)sender {
+    
 }
 
 #if 0
@@ -426,13 +451,15 @@ ATLMSchedulingCardCollectionViewCellDirectionFont(void) {
         
         UIView *content = [self contentView];
         
-        _choice = [[UILabel alloc] init];
+        _choice = [UIButton buttonWithType:(UIButtonTypeCustom)];
         [_choice setTranslatesAutoresizingMaskIntoConstraints:NO];
-        [_choice setFont:ATLMSchedulingCardCollectionViewCellChoiceFont()];
-        [_choice setTextAlignment:(NSTextAlignmentCenter)];
-        [_choice setNumberOfLines:2];
         [_choice setClipsToBounds:YES];
         [[_choice layer] setCornerRadius:4.0];
+        
+        [[_choice titleLabel] setNumberOfLines:2];
+
+        [_choice addTarget:self action:@selector(performSelection:) forControlEvents:UIControlEventTouchUpInside];
+
         [content addSubview:_choice];
         
         [[NSLayoutConstraint constraintWithItem:_choice attribute:(NSLayoutAttributeLeft) relatedBy:(NSLayoutRelationEqual) toItem:content attribute:(NSLayoutAttributeLeft) multiplier:1.0 constant:0.0] setActive:YES];
@@ -441,6 +468,27 @@ ATLMSchedulingCardCollectionViewCellDirectionFont(void) {
     }
     
     return self;
+}
+
+- (void)prepareForReuse {
+    [super prepareForReuse];
+    [self setTarget:nil];
+    [self setAction:nil];
+}
+
+- (void)performSelection:(id)sender {
+    
+    id target = [self target];
+    SEL action = [self action];
+    
+    if ((nil != target) && (NULL != action)) {
+        sender = self;
+        NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:[target methodSignatureForSelector:action]];
+        [invocation setTarget:target];
+        [invocation setSelector:action];
+        [invocation setArgument:&sender atIndex:2];
+        [invocation invoke];
+    }
 }
 
 @end
