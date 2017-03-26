@@ -68,6 +68,12 @@ NS_ASSUME_NONNULL_BEGIN     // {
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
+#if 0
+#pragma mark - Instance Methods
+#endif
+
+- (BOOL)isEqualToCard:(ATLMCard *)other;
+
 @end
 
 NS_ASSUME_NONNULL_END       // }

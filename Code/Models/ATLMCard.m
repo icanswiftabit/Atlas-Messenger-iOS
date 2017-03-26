@@ -54,6 +54,20 @@ NS_ASSUME_NONNULL_BEGIN     // {
     return ((1 < count) ? [parts subarrayWithRange:NSMakeRange(1, (count - 1))] : nil);
 }
 
+- (BOOL)isEqual:(id)other {
+    return ([other isKindOfClass:[self class]] && [self isEqualToCard:other]);
+}
+
+- (BOOL)isEqualToCard:(ATLMCard *)other {
+    
+    BOOL result = [super isEqual:other];
+    if (!result && (nil != other)) {
+        result = [[self message] isEqual:[other message]];
+    }
+    
+    return result;
+}
+
 + (BOOL)isSupportedMessage:(LYRMessage *)message {
     return YES;
 }
