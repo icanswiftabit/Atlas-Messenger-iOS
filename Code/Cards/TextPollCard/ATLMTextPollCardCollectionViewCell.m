@@ -11,6 +11,7 @@
 
 #import "ATLMTextPollCardCollectionViewCell.h"
 #import "ATLMTextPollCard.h"
+#import "ATLMLayerController.h"
 
 NS_ASSUME_NONNULL_BEGIN     // {
 
@@ -112,6 +113,8 @@ ATLMTextPollCardCollectionViewCellDirectionFont(void) {
 @property (nonatomic, strong, readonly) UITableView *choices;
 @property (nonatomic, strong, readonly) UILabel *direction;
 @property (nonatomic, assign, readwrite) ATLCellType type;
+@property (nonatomic, strong, readwrite, nullable) NSURLSessionDataTask *task;
+@property (nonatomic, strong, readwrite, nullable) NSNumber *vote;
 
 - (void)lyr_CommonInit;
 
@@ -125,6 +128,7 @@ ATLMTextPollCardCollectionViewCellDirectionFont(void) {
 #endif
 
 @implementation ATLMTextPollCardCollectionViewCell
+@synthesize layerController = _layerController;
 
 - (instancetype)initWithFrame:(CGRect)frame {
     
@@ -179,7 +183,6 @@ ATLMTextPollCardCollectionViewCellDirectionFont(void) {
     [_direction setTranslatesAutoresizingMaskIntoConstraints:NO];
     [_direction setFont:ATLMTextPollCardCollectionViewCellDirectionFont()];
     [_direction setTextAlignment:(NSTextAlignmentCenter)];
-    [_direction setText:@"You can only submit once"];
     [_direction setAlpha:0.3f];
     [content addSubview:_direction];
     [content sendSubviewToBack:_direction];
@@ -236,6 +239,7 @@ ATLMTextPollCardCollectionViewCellDirectionFont(void) {
     [super setMessage:message];
     
     [self setCard:nil];
+    [self synchronize];
     
     for (LYRMessagePart *part in [message parts]) {
         
@@ -294,6 +298,100 @@ ATLMTextPollCardCollectionViewCellDirectionFont(void) {
     [choices reloadData];
     
     [[self direction] setTextColor:fgColor];
+}
+
+- (void)setLayerController:(nullable ATLMLayerController *)layerController {
+
+    if ([self layerController] != layerController) {
+        _layerController = layerController;
+        [self setTask:nil];
+        [self synchronize];
+    }
+}
+
+- (void)setTask:(nullable NSURLSessionDataTask *)task {
+    
+    if ([self task] != task) {
+        _task = task;
+        
+        BOOL enabled = NO;
+        ATLMessageBubbleView *bv = [self bubbleView];
+        if (nil != task) {
+            [bv updateProgressIndicatorWithProgress:0.0 visible:YES animated:NO];
+            [bv updateProgressIndicatorWithProgress:80.0 visible:YES animated:YES];
+        }
+        else {
+            enabled = (nil == [self vote]);
+            [bv updateProgressIndicatorWithProgress:100.0 visible:NO animated:YES];
+        }
+        [[self choices] setUserInteractionEnabled:enabled];
+    }
+}
+
+- (void)setVote:(nullable NSNumber *)vote {
+    
+    if (![[self vote] isEqual:vote]) {
+
+        _vote = vote;
+        
+        BOOL voted = (nil == vote);
+        
+        UITableView *choices = [self choices];
+        [choices reloadData];
+        [choices setUserInteractionEnabled:!voted];
+
+        [[self direction] setText:(voted ? @"You can only submit once." : @"Thanks for submitting!")];\
+    }
+}
+
+- (void)synchronize {
+    
+    if (nil == [self task]) {
+        ATLMCard *card = [self card];
+        ATLMLayerController *controller = [self layerController];
+        if ((nil != card) && (nil != controller)) {
+            
+            id<ATLMRESTEndpoint> endpoint = [controller RESTEndpoint];
+            NSURLSession *session = [endpoint URLSession];
+            NSURL *baseURL = [endpoint baseURL];
+            if ((nil != session) && (nil != baseURL)) {
+                
+                [self setVote:nil];
+                
+                __weak typeof(self) wSelf = self;
+                NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"/message/%@", [[[card message] identifier] lastPathComponent]]
+                                    relativeToURL:baseURL];
+                NSURLSessionDataTask *task = [session dataTaskWithURL:url completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        typeof(wSelf) sSelf = wSelf;
+                        if ((nil != sSelf) && [card isEqualToCard:[sSelf card]]) {
+                            
+                            if ((nil == error) && (0 != [data length])) {
+                                NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
+                                if ([json isKindOfClass:[NSDictionary class]]) {
+                                    NSString *participant = [[[controller layerClient] authenticatedUser] userID];
+                                    NSDictionary *votes = [json objectForKey:@"votes"];
+                                    if ((nil != participant) && [votes isKindOfClass:[NSDictionary class]]) {
+                                        NSNumber *choice = [votes objectForKey:participant];
+                                        if ([choice isKindOfClass:[NSNumber class]]) {
+                                            [sSelf setVote:choice];
+                                        }
+                                    }
+                                }
+                            }
+                            else {
+                                [sSelf setVote:nil];
+                            }
+                            
+                            [sSelf setTask:nil];
+                        }
+                    });
+                }];
+                [self setTask:task];
+                [task resume];
+            }
+        }
+    }
 }
 
 - (void)observeValueForKeyPath:(nullable NSString *)keyPath
@@ -366,6 +464,10 @@ ATLMTextPollCardCollectionViewCellDirectionFont(void) {
     
     ATLMTextPollCardChoiceViewCell *result = [[ATLMTextPollCardChoiceViewCell alloc] init];
     
+    NSUInteger row = [indexPath row];
+    NSNumber *vote = [self vote];
+    BOOL selected = ((nil != vote) && ([vote unsignedIntegerValue] == row));
+    
     NSString *choice = [[[self card] choices] objectAtIndex:[indexPath row]];
     
     ATLCellType type = [self type];
@@ -375,6 +477,7 @@ ATLMTextPollCardCollectionViewCellDirectionFont(void) {
                                                                             NSForegroundColorAttributeName:ATLBlueColor()}]
                       forState:(UIControlStateNormal)];
     [button setBackgroundColor:ATLMTextPollCardCollectionViewCellChoiceButtonBackgroundColor(type)];
+    [button setAlpha:(((nil == vote) || selected) ? 1.0 : 0.2)];
     
     [result setBackgroundColor:((ATLOutgoingCellType == type) ? ATLBlueColor() : ATLLightGrayColor())];
     
@@ -382,13 +485,78 @@ ATLMTextPollCardCollectionViewCellDirectionFont(void) {
     
     [result setTarget:self];
     [result setAction:@selector(sendResponse:)];
-    [result setTag:[indexPath row]];
+    [result setTag:row];
     
     return result;
 }
 
 - (void)sendResponse:(id)sender {
     
+    if (nil == [self task]) {
+        ATLMCard *card = [self card];
+        ATLMLayerController *controller = [self layerController];
+        LYRClient *client = [controller layerClient];
+        if ((nil != card) && (nil != controller) && (nil != client)) {
+            
+            id<ATLMRESTEndpoint> endpoint = [controller RESTEndpoint];
+            NSURLSession *session = [endpoint URLSession];
+            NSURL *baseURL = [endpoint baseURL];
+            if ((nil != session) && (nil != baseURL)) {
+                
+                NSNumber *choice = @([sender tag]);
+                NSArray *payload = @[@{@"operation":@"set",
+                                       @"property":[NSString stringWithFormat:@"votes.%@", [[client authenticatedUser] userID]],
+                                       @"value":choice}];
+                NSData *data = [NSJSONSerialization dataWithJSONObject:payload options:0 error:NULL];
+                
+                [self setVote:choice];
+                
+                __weak typeof(self) wSelf = self;
+                NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"/message/%@", [[[card message] identifier] lastPathComponent]]
+                                    relativeToURL:baseURL];
+                NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+                [request setHTTPMethod:@"PATCH"];
+                [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+                [request setHTTPBody:data];
+
+                NSURLSessionDataTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        typeof(wSelf) sSelf = wSelf;
+                        if ((nil != sSelf) && [card isEqualToCard:[sSelf card]]) {
+                            
+                            BOOL succeeded = NO;
+                            if ((nil == error) && (0 != [data length])) {
+                                NSError *err = nil;
+                                NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:0 error:&err];
+                                if ([json isKindOfClass:[NSDictionary class]]) {
+                                    succeeded = [[json objectForKey:@"ok"] boolValue];
+                                    if (succeeded) {
+                                        
+                                        // **FIXME** This should realy inform the user of any failure
+                                        if (nil != err) {
+                                            NSLog(@"Sending poll response failed (%@)!", err);
+                                        }
+                                        else if (!succeeded) {
+                                            NSLog(@"Unable to send poll response!");
+                                        }
+                                    }
+                                }
+                            }
+                            
+                            if (!succeeded) {
+                                [sSelf setVote:nil];
+                            }
+                            
+                            [sSelf setTask:nil];
+                        }
+                    });
+                }];
+                [self setTask:task];
+                [task resume];
+            }
+        }
+    }
 }
 
 #if 0
