@@ -237,8 +237,13 @@ ATLMTextPollCardCollectionViewCellDirectionFont(void) {
         [part addObserver:self forKeyPath:@"transferStatus" options:NSKeyValueObservingOptionNew context:NULL];
         
         // Start downloading the parts if any are outstanding
+        LYRContentTransferStatus status = [part transferStatus];
         if ([part transferStatus] == LYRContentTransferReadyForDownload) {
             (void)[part downloadContent:NULL];
+            [[self bubbleView] updateProgressIndicatorWithProgress:0.0 visible:YES animated:NO];
+        }
+        else {
+            [[self bubbleView] updateProgressIndicatorWithProgress:0.0 visible:(LYRContentTransferComplete != status) animated:NO];
         }
     }
     
@@ -291,22 +296,25 @@ ATLMTextPollCardCollectionViewCellDirectionFont(void) {
                         change:(nullable NSDictionary<NSString*, id> *)change
                        context:(nullable void *)context
 {
-    if (LYRContentTransferComplete == [object transferStatus]) {
-        
-        // Re-dispatch this call to the main thread if it's not.
-        if (![[NSThread currentThread] isMainThread]) {
-            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                [self observeValueForKeyPath:keyPath ofObject:object change:change context:context];
-            }];
-            return;
-        }
-        
-        LYRMessage *message = [self message];
-        LYRMessage *other = [(LYRMessagePart*)object message];
-        
-        if ([message isEqual:other]) {
+    // Re-dispatch this call to the main thread if it's not.
+    if (![[NSThread currentThread] isMainThread]) {
+        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+            [self observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+        }];
+        return;
+    }
+    
+    LYRMessage *message = [self message];
+    LYRMessage *other = [(LYRMessagePart*)object message];
+    
+    if ([message isEqual:other]) {
+        if (LYRContentTransferComplete == [object transferStatus]) {
+            [[self bubbleView] updateProgressIndicatorWithProgress:1.0 visible:NO animated:YES];
             [[self question] setText:[[self card] question]];
             [[self choices] reloadData];
+        }
+        else {
+            [[self bubbleView] updateProgressIndicatorWithProgress:[[(LYRMessagePart*)object progress] fractionCompleted] visible:YES animated:YES];
         }
     }
 }
