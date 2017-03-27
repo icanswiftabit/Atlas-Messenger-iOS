@@ -154,16 +154,19 @@ ATLMSchedulingCardCollectionViewCellDirectionFont(void) {
     _icon = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"SchedulingIcon"] imageWithRenderingMode:(UIImageRenderingModeAlwaysTemplate)]];
     [_icon setTranslatesAutoresizingMaskIntoConstraints:NO];
     [content addSubview:_icon];
+    [content sendSubviewToBack:_icon];
     
     _title = [[UILabel alloc] init];
     [_title setTranslatesAutoresizingMaskIntoConstraints:NO];
     [_title setFont:ATLMSchedulingCardCollectionViewCellTitleFont()];
     [_title setText:@"Calendar"];
     [content addSubview:_title];
+    [content sendSubviewToBack:_title];
     
     _separator = [[UIView alloc] init];
     [_separator setTranslatesAutoresizingMaskIntoConstraints:NO];
     [content addSubview:_separator];
+    [content sendSubviewToBack:_separator];
     
     UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
     
@@ -173,6 +176,7 @@ ATLMSchedulingCardCollectionViewCellDirectionFont(void) {
     [_choices setDelegate:self];
     [_choices registerClass:[ATLMSchedulingCardChoiceViewCell class] forCellWithReuseIdentifier:[ATLMSchedulingCardChoiceViewCell reuseIdentifier]];
     [content addSubview:_choices];
+    [content sendSubviewToBack:_choices];
     
     _direction = [[UILabel alloc] init];
     [_direction setTranslatesAutoresizingMaskIntoConstraints:NO];
@@ -181,6 +185,7 @@ ATLMSchedulingCardCollectionViewCellDirectionFont(void) {
     [_direction setText:@"You can only submit once"];
     [_direction setAlpha:0.3f];
     [content addSubview:_direction];
+    [content sendSubviewToBack:_direction];
     
     NSDictionary *views = NSDictionaryOfVariableBindings(_icon, _title, _separator, _choices, _direction);
     NSDictionary *metrics = @{@"ATLMSchedulingCardCollectionViewCellTopPadding": @(ATLMSchedulingCardCollectionViewCellTopPadding),

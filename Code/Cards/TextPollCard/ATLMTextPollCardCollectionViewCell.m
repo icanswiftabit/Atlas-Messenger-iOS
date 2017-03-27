@@ -151,16 +151,19 @@ ATLMTextPollCardCollectionViewCellDirectionFont(void) {
     _icon = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"TextPollIcon"] imageWithRenderingMode:(UIImageRenderingModeAlwaysTemplate)]];
     [_icon setTranslatesAutoresizingMaskIntoConstraints:NO];
     [content addSubview:_icon];
+    [content sendSubviewToBack:_icon];
     
     _question = [[UILabel alloc] init];
     [_question setTranslatesAutoresizingMaskIntoConstraints:NO];
     [_question setFont:ATLMTextPollCardCollectionViewCellQuestionFont()];
     [_question setNumberOfLines:2];
     [content addSubview:_question];
+    [content sendSubviewToBack:_question];
     
     _separator = [[UIView alloc] init];
     [_separator setTranslatesAutoresizingMaskIntoConstraints:NO];
     [content addSubview:_separator];
+    [content sendSubviewToBack:_separator];
     
     _choices = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
     [_choices setTranslatesAutoresizingMaskIntoConstraints:NO];
@@ -170,6 +173,7 @@ ATLMTextPollCardCollectionViewCellDirectionFont(void) {
     [_choices setSeparatorStyle:(UITableViewCellSeparatorStyleNone)];
     [_choices setAllowsSelection:NO];
     [content addSubview:_choices];
+    [content sendSubviewToBack:_choices];
 
     _direction = [[UILabel alloc] init];
     [_direction setTranslatesAutoresizingMaskIntoConstraints:NO];
@@ -178,6 +182,7 @@ ATLMTextPollCardCollectionViewCellDirectionFont(void) {
     [_direction setText:@"You can only submit once"];
     [_direction setAlpha:0.3f];
     [content addSubview:_direction];
+    [content sendSubviewToBack:_direction];
 
     NSDictionary *views = NSDictionaryOfVariableBindings(_icon, _question, _separator, _choices, _direction);
     NSDictionary *metrics = @{@"ATLMTextPollCardCollectionViewCellTopPadding": @(ATLMTextPollCardCollectionViewCellTopPadding),
