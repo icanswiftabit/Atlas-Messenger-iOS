@@ -129,6 +129,7 @@
 		1E4999B21E86EF510022D886 /* SchedulingIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SchedulingIcon@2x.png"; sourceTree = "<group>"; };
 		1E4999B31E86EF510022D886 /* SchedulingIcon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SchedulingIcon@3x.png"; sourceTree = "<group>"; };
 		1E4999C01E897CB20022D886 /* ATLMCardResponder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ATLMCardResponder.h; sourceTree = "<group>"; };
+		1E4999C11E89B6630022D886 /* ATLMRESTEndpoint.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ATLMRESTEndpoint.h; sourceTree = "<group>"; };
 		1E8D72201E862EB2000E058A /* ATLMSchedulingCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMSchedulingCard.h; sourceTree = "<group>"; };
 		1E8D72211E862EB2000E058A /* ATLMSchedulingCard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMSchedulingCard.m; sourceTree = "<group>"; };
 		1E8D72221E862EB2000E058A /* ATLMSchedulingCardCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMSchedulingCardCollectionViewCell.h; sourceTree = "<group>"; };
@@ -600,6 +601,7 @@
 				1E9B4ACB1E7990E200B8BBAB /* ATLMCardCellPresentable.h */,
 				1E9B4ACF1E79E20000B8BBAB /* ATLMCardPresenting.h */,
 				1E4999C01E897CB20022D886 /* ATLMCardResponder.h */,
+				1E4999C11E89B6630022D886 /* ATLMRESTEndpoint.h */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
