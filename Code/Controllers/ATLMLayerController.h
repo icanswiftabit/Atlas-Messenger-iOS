@@ -22,6 +22,7 @@
 #import <Foundation/Foundation.h>
 #import <LayerKit/LYRClient.h>
 #import "ATLMAuthenticationProvider.h"
+#import "ATLMRESTEndpoint.h"
 
 @class ATLMUserCredentials;
 
@@ -137,6 +138,11 @@ typedef NS_ENUM(NSUInteger, ATLMLayerControllerError) {
  @abstract The `LYRClient` object for the application.
  */
 @property (nullable, nonatomic, readonly) LYRClient *layerClient;
+
+/**
+ @abstract A general endpoint for performing REST API calls if any are supported.
+ */
+@property (nullable, nonatomic, readonly) id<ATLMRESTEndpoint> RESTEndpoint;
 
 /**
  @abstract Queries the underlying LayerKit client for the total count of `LYRMessage` objects whose `isUnread` property is true.
