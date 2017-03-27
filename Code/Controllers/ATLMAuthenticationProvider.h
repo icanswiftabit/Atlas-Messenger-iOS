@@ -21,6 +21,7 @@
 #import <Foundation/Foundation.h>
 #import "ATLMAuthenticating.h"
 #import "ATLMConfiguration.h"
+#import "ATLMRESTEndpoint.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -37,7 +38,7 @@ extern NSString * _Nonnull const ATLMPasswordKey;
 /**
  @abstract The `ATLMAuthenticationProvider` conforms to the `ATLMAuthenticating` protocol. It provides for making requests to the Layer Identity Provider in order to request identity tokens needed of LayerKit authentication.
  */
-@interface ATLMAuthenticationProvider : NSObject <ATLMAuthenticating>
+@interface ATLMAuthenticationProvider : NSObject <ATLMAuthenticating, ATLMRESTEndpoint>
 
 @property (nonatomic, copy, readonly) NSURL *layerAppID;
 
