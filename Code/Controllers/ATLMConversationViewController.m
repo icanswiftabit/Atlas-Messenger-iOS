@@ -29,6 +29,7 @@
 #import <objc/runtime.h>
 #import "ATLMCardCellPresentable.h"
 #import "ATLMCardPresenting.h"
+#import "ATLMCardResponder.h"
 
 static NSDateFormatter *ATLMShortTimeFormatter()
 {
@@ -297,6 +298,10 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
         
         BOOL isOutgoing = [self.layerClient.authenticatedUser.userID isEqualToString:message.sender.userID];
         [abcvc configureCellForType:(isOutgoing ? ATLOutgoingCellType : ATLIncomingCellType)];
+        
+        if ([abcvc conformsToProtocol:@protocol(ATLMCardResponder)] && [abcvc respondsToSelector:@selector(setLayerController:)]) {
+            [(id<ATLMCardResponder>)abcvc setLayerController:[self layerController]];
+        }        
     }
 }
 
