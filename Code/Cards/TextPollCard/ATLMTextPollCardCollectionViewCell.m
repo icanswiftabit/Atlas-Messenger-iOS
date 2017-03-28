@@ -232,48 +232,51 @@ ATLMTextPollCardCollectionViewCellDirectionFont(void) {
 
 - (void)setMessage:(LYRMessage *)message {
     
-    for (LYRMessagePart *part in [[self message] parts]) {
-        [part removeObserver:self forKeyPath:@"transferStatus"];
-    }
+    if (![[self message] isEqual:message]) {
+        
+        for (LYRMessagePart *part in [[self message] parts]) {
+            [part removeObserver:self forKeyPath:@"transferStatus"];
+        }
 
-    [super setMessage:message];
-    
-    [self setCard:nil];
-    [self synchronize];
-    
-    for (LYRMessagePart *part in [message parts]) {
+        [super setMessage:message];
         
-        [part addObserver:self forKeyPath:@"transferStatus" options:NSKeyValueObservingOptionNew context:NULL];
+        [self setCard:nil];
+        [self synchronize];
         
-        // Start downloading the parts if any are outstanding
-        LYRContentTransferStatus status = [part transferStatus];
-        if ([part transferStatus] == LYRContentTransferReadyForDownload) {
-            (void)[part downloadContent:NULL];
-            [[self bubbleView] updateProgressIndicatorWithProgress:0.0 visible:YES animated:NO];
+        for (LYRMessagePart *part in [message parts]) {
+            
+            [part addObserver:self forKeyPath:@"transferStatus" options:NSKeyValueObservingOptionNew context:NULL];
+            
+            // Start downloading the parts if any are outstanding
+            LYRContentTransferStatus status = [part transferStatus];
+            if ([part transferStatus] == LYRContentTransferReadyForDownload) {
+                (void)[part downloadContent:NULL];
+                [[self bubbleView] updateProgressIndicatorWithProgress:0.0 visible:YES animated:NO];
+            }
+            else {
+                [[self bubbleView] updateProgressIndicatorWithProgress:0.0 visible:(LYRContentTransferComplete != status) animated:NO];
+            }
+        }
+        
+        ATLMTextPollCard *card = [self card];
+        if (nil != card) {
+
+            UILabel *label = [self question];
+            NSString *question = [card question];
+            [label setText:question];
+            [label setHidden:(0 == [question length])];
+            
+            UITableView *table = [self choices];
+            [table reloadData];
+            [table setHidden:NO];
         }
         else {
-            [[self bubbleView] updateProgressIndicatorWithProgress:0.0 visible:(LYRContentTransferComplete != status) animated:NO];
+            [[self question] setHidden:YES];
+            [[self choices] setHidden:YES];
         }
-    }
-    
-    ATLMTextPollCard *card = [self card];
-    if (nil != card) {
-
-        UILabel *label = [self question];
-        NSString *question = [card question];
-        [label setText:question];
-        [label setHidden:(0 == [question length])];
         
-        UITableView *table = [self choices];
-        [table reloadData];
-        [table setHidden:NO];
+        [self updateBubbleWidth:[[self class] cellSizeForMessage:message withCellWidth:CGRectGetWidth([self bounds])].width];
     }
-    else {
-        [[self question] setHidden:YES];
-        [[self choices] setHidden:YES];
-    }
-    
-    [self updateBubbleWidth:[[self class] cellSizeForMessage:message withCellWidth:CGRectGetWidth([self bounds])].width];
 }
 
 - (void)setType:(ATLCellType)type {

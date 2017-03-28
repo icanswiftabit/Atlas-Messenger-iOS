@@ -236,45 +236,48 @@ ATLMSchedulingCardCollectionViewCellDirectionFont(void) {
 
 - (void)setMessage:(LYRMessage *)message {
     
-    for (LYRMessagePart *part in [[self message] parts]) {
-        [part removeObserver:self forKeyPath:@"transferStatus"];
-    }
-    
-    [super setMessage:message];
-    
-    [self setCard:nil];
-    [self synchronize];
-    
-    for (LYRMessagePart *part in [message parts]) {
+    if (![[self message] isEqual:message]) {
         
-        [part addObserver:self forKeyPath:@"transferStatus" options:NSKeyValueObservingOptionNew context:NULL];
+        for (LYRMessagePart *part in [[self message] parts]) {
+            [part removeObserver:self forKeyPath:@"transferStatus"];
+        }
         
-        // Start downloading the parts if any are outstanding
-        LYRContentTransferStatus status = [part transferStatus];
-        if (LYRContentTransferReadyForDownload == status) {
-            (void)[part downloadContent:NULL];
-            [[self bubbleView] updateProgressIndicatorWithProgress:0.0 visible:YES animated:NO];
+        [super setMessage:message];
+        
+        [self setCard:nil];
+        [self synchronize];
+        
+        for (LYRMessagePart *part in [message parts]) {
+            
+            [part addObserver:self forKeyPath:@"transferStatus" options:NSKeyValueObservingOptionNew context:NULL];
+            
+            // Start downloading the parts if any are outstanding
+            LYRContentTransferStatus status = [part transferStatus];
+            if (LYRContentTransferReadyForDownload == status) {
+                (void)[part downloadContent:NULL];
+                [[self bubbleView] updateProgressIndicatorWithProgress:0.0 visible:YES animated:NO];
+            }
+            else {
+                [[self bubbleView] updateProgressIndicatorWithProgress:0.0 visible:(LYRContentTransferComplete != status) animated:NO];
+            }
+        }
+        
+        [self updateBubbleWidth:[[self class] cellSizeForMessage:message withCellWidth:CGRectGetWidth([self bounds])].width];
+        
+        ATLMSchedulingCard *card = [self card];
+        if (nil != card) {
+            
+            UILabel *label = [self title];
+            NSString *title = [card title];
+            [label setText:((0 != [title length]) ? title : @"When Can We Meet")];
+            
+            UICollectionView *choices = [self choices];
+            [choices reloadData];
+            [choices setHidden:NO];
         }
         else {
-            [[self bubbleView] updateProgressIndicatorWithProgress:0.0 visible:(LYRContentTransferComplete != status) animated:NO];
+            [[self choices] setHidden:YES];
         }
-    }
-    
-    [self updateBubbleWidth:[[self class] cellSizeForMessage:message withCellWidth:CGRectGetWidth([self bounds])].width];
-    
-    ATLMSchedulingCard *card = [self card];
-    if (nil != card) {
-        
-        UILabel *label = [self title];
-        NSString *title = [card title];
-        [label setText:((0 != [title length]) ? title : @"When Can We Meet")];
-        
-        UICollectionView *choices = [self choices];
-        [choices reloadData];
-        [choices setHidden:NO];
-    }
-    else {
-        [[self choices] setHidden:YES];
     }
 }
 
