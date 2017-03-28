@@ -131,7 +131,7 @@ static ATLMDateProximity ATLMProximityToDate(NSDate *date)
 }
 
 @interface ATLMConversationViewController () <ATLMConversationDetailViewControllerDelegate, ATLParticipantTableViewControllerDelegate>
-@property (nonatomic, copy, readwrite) NSMutableDictionary<NSString *, Class<ATLMCardCellPesentable>> *factories;
+@property (nonatomic, copy, readwrite) NSDictionary<NSString *, Class<ATLMCardCellPesentable>> *factories;
 
 - (nullable NSString *)cardCellFactoryReuseIdentifierForMesssage:(LYRMessage *)message;
 
