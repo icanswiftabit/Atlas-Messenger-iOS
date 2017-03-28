@@ -11,6 +11,7 @@
 
 #import <Atlas/Atlas.h>
 #import "ATLMCardPresenting.h"
+#import "ATLMCardResponder.h"
 
 NS_ASSUME_NONNULL_BEGIN     // {
 
@@ -18,8 +19,7 @@ NS_ASSUME_NONNULL_BEGIN     // {
 #if 0
 #pragma mark -
 #endif
-
-@interface ATLMSchedulingCardCollectionViewCell : ATLBaseCollectionViewCell <ATLMCardPresenting>
+@interface ATLMSchedulingCardCollectionViewCell : ATLBaseCollectionViewCell <ATLMCardPresenting, ATLMCardResponder>
 
 @end
 
