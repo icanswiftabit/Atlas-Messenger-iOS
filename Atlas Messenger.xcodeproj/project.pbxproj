@@ -34,6 +34,8 @@
 		1E8D72251E862EB2000E058A /* ATLMSchedulingCardCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E8D72231E862EB2000E058A /* ATLMSchedulingCardCollectionViewCell.m */; };
 		1E8D722C1E862F1A000E058A /* ATLMTextPollCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E8D72291E862F1A000E058A /* ATLMTextPollCard.m */; };
 		1E8D722D1E862F1A000E058A /* ATLMTextPollCardCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E8D722B1E862F1A000E058A /* ATLMTextPollCardCollectionViewCell.m */; };
+		1EA4E7FA1E8EB1AA00C34971 /* ATLMFileCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EA4E7F91E8EB1AA00C34971 /* ATLMFileCard.m */; };
+		1EA4E7FD1E8EB52F00C34971 /* ATLMFileCardCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EA4E7FC1E8EB52F00C34971 /* ATLMFileCardCollectionViewCell.m */; };
 		251D8DC01A9688C50000BFA2 /* ATLMAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 251D8D851A9688C40000BFA2 /* ATLMAppDelegate.m */; };
 		251D8DC21A9688C50000BFA2 /* ATLMLayerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 251D8D8A1A9688C40000BFA2 /* ATLMLayerController.m */; };
 		251D8DC31A9688C50000BFA2 /* ATLMConversationDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 251D8D8C1A9688C40000BFA2 /* ATLMConversationDetailViewController.m */; };
@@ -140,6 +142,10 @@
 		1E8D722B1E862F1A000E058A /* ATLMTextPollCardCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMTextPollCardCollectionViewCell.m; sourceTree = "<group>"; };
 		1E9B4ACB1E7990E200B8BBAB /* ATLMCardCellPresentable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMCardCellPresentable.h; sourceTree = "<group>"; };
 		1E9B4ACF1E79E20000B8BBAB /* ATLMCardPresenting.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ATLMCardPresenting.h; sourceTree = "<group>"; };
+		1EA4E7F81E8EB1AA00C34971 /* ATLMFileCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMFileCard.h; sourceTree = "<group>"; };
+		1EA4E7F91E8EB1AA00C34971 /* ATLMFileCard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMFileCard.m; sourceTree = "<group>"; };
+		1EA4E7FB1E8EB52F00C34971 /* ATLMFileCardCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMFileCardCollectionViewCell.h; sourceTree = "<group>"; };
+		1EA4E7FC1E8EB52F00C34971 /* ATLMFileCardCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMFileCardCollectionViewCell.m; sourceTree = "<group>"; };
 		251D8D841A9688C40000BFA2 /* ATLMAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMAppDelegate.h; sourceTree = "<group>"; };
 		251D8D851A9688C40000BFA2 /* ATLMAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMAppDelegate.m; sourceTree = "<group>"; };
 		251D8D891A9688C40000BFA2 /* ATLMLayerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMLayerController.h; sourceTree = "<group>"; };
@@ -369,6 +375,7 @@
 		1E8D72271E862ED2000E058A /* Cards */ = {
 			isa = PBXGroup;
 			children = (
+				1EA4E7F71E8EB16400C34971 /* FileCard */,
 				1E8D722E1E862F22000E058A /* TextPoll */,
 				1E8D72261E862EBB000E058A /* SchedulingCard */,
 			);
@@ -386,6 +393,17 @@
 			);
 			name = TextPoll;
 			path = TextPollCard;
+			sourceTree = "<group>";
+		};
+		1EA4E7F71E8EB16400C34971 /* FileCard */ = {
+			isa = PBXGroup;
+			children = (
+				1EA4E7F81E8EB1AA00C34971 /* ATLMFileCard.h */,
+				1EA4E7F91E8EB1AA00C34971 /* ATLMFileCard.m */,
+				1EA4E7FB1E8EB52F00C34971 /* ATLMFileCardCollectionViewCell.h */,
+				1EA4E7FC1E8EB52F00C34971 /* ATLMFileCardCollectionViewCell.m */,
+			);
+			path = FileCard;
 			sourceTree = "<group>";
 		};
 		251D8D861A9688C40000BFA2 /* Controllers */ = {
@@ -868,6 +886,8 @@
 				251D8DC81A9688C50000BFA2 /* ATLMParticipantTableViewController.m in Sources */,
 				251D8DC41A9688C50000BFA2 /* ATLMConversationListViewController.m in Sources */,
 				1E8D722C1E862F1A000E058A /* ATLMTextPollCard.m in Sources */,
+				1EA4E7FD1E8EB52F00C34971 /* ATLMFileCardCollectionViewCell.m in Sources */,
+				1EA4E7FA1E8EB1AA00C34971 /* ATLMFileCard.m in Sources */,
 				251D8DD81A9688C50000BFA2 /* ATLMSettingsHeaderView.m in Sources */,
 				408588481E3C097700C7831C /* main.m in Sources */,
 				1E099A5C1E6E400300C8DA1F /* ATLMCard.m in Sources */,
