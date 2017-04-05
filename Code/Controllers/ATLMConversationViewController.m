@@ -30,6 +30,8 @@
 #import "ATLMCardCellPresentable.h"
 #import "ATLMCardPresenting.h"
 #import "ATLMCardResponder.h"
+#import "ATLMCardResponse.h"
+#import "ATLMCardResponseCollectionViewCell.h"
 
 static NSDateFormatter *ATLMShortTimeFormatter()
 {
@@ -189,6 +191,9 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
     
     [self setFactories:factories];
     
+    Class clss = [ATLMCardResponseCollectionViewCell class];
+    [self registerClass:clss forMessageCellWithReuseIdentifier:NSStringFromClass(clss)];
+    
     [self configureUserInterfaceAttributes];
     [self registerNotificationObservers];
 }
@@ -285,6 +290,18 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
     if (identifier != nil) {
         Class<ATLMCardCellPesentable> factory = [[self factories] objectForKey:identifier];
         result = [[factory collectionViewCellClass] cellSizeForMessage:message withCellWidth:cellWidth].height;
+    }
+    else {
+        
+        NSArray<LYRMessagePart *> *parts = [message parts];
+        
+        NSUInteger count = [parts count];
+        LYRMessagePart *initial = [parts firstObject];
+        parts = ((1 == count) ? nil : [parts subarrayWithRange:NSMakeRange(1, count - 1)]);
+        ATLMCardResponse *response = [ATLMCardResponse cardResponseWithMessagePart:initial supplementalParts:parts];
+        if (nil != response) {
+            result = [ATLMCardResponseCollectionViewCell cellSizeForMessage:message withCellWidth:cellWidth].height;
+        }
     }
     
     return result;
@@ -456,7 +473,22 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
 
 - (nullable NSString *)conversationViewController:(ATLConversationViewController *)viewController reuseIdentifierForMessage:(LYRMessage *)message
 {
-    return [self cardCellFactoryReuseIdentifierForMesssage:message];
+    NSString *result = [self cardCellFactoryReuseIdentifierForMesssage:message];
+    
+    if (nil == result) {
+        
+        NSArray<LYRMessagePart *> *parts = [message parts];
+        
+        NSUInteger count = [parts count];
+        LYRMessagePart *initial = [parts firstObject];
+        parts = ((1 == count) ? nil : [parts subarrayWithRange:NSMakeRange(1, count - 1)]);
+        ATLMCardResponse *response = [ATLMCardResponse cardResponseWithMessagePart:initial supplementalParts:parts];
+        if (nil != response) {
+            result = NSStringFromClass([ATLMCardResponseCollectionViewCell class]);
+        }
+    }
+    
+    return result;
 }
 
 #pragma mark - ATLAddressBarControllerDelegate
