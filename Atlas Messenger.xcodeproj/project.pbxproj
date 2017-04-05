@@ -31,6 +31,7 @@
 		1E4999B51E86EF510022D886 /* SchedulingIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1E4999B21E86EF510022D886 /* SchedulingIcon@2x.png */; };
 		1E4999B61E86EF510022D886 /* SchedulingIcon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1E4999B31E86EF510022D886 /* SchedulingIcon@3x.png */; };
 		1E4999BC1E870A5C0022D886 /* ATLMCardResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E4999BB1E870A5C0022D886 /* ATLMCardResponse.m */; };
+		1E4999BF1E8712EF0022D886 /* ATLMCardResponseCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E4999BE1E8712EF0022D886 /* ATLMCardResponseCollectionViewCell.m */; };
 		1E8D72241E862EB2000E058A /* ATLMSchedulingCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E8D72211E862EB2000E058A /* ATLMSchedulingCard.m */; };
 		1E8D72251E862EB2000E058A /* ATLMSchedulingCardCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E8D72231E862EB2000E058A /* ATLMSchedulingCardCollectionViewCell.m */; };
 		1E8D722C1E862F1A000E058A /* ATLMTextPollCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E8D72291E862F1A000E058A /* ATLMTextPollCard.m */; };
@@ -133,6 +134,8 @@
 		1E4999B31E86EF510022D886 /* SchedulingIcon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SchedulingIcon@3x.png"; sourceTree = "<group>"; };
 		1E4999BA1E870A5C0022D886 /* ATLMCardResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMCardResponse.h; sourceTree = "<group>"; };
 		1E4999BB1E870A5C0022D886 /* ATLMCardResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMCardResponse.m; sourceTree = "<group>"; };
+		1E4999BD1E8712EF0022D886 /* ATLMCardResponseCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMCardResponseCollectionViewCell.h; sourceTree = "<group>"; };
+		1E4999BE1E8712EF0022D886 /* ATLMCardResponseCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMCardResponseCollectionViewCell.m; sourceTree = "<group>"; };
 		1E4999C01E897CB20022D886 /* ATLMCardResponder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ATLMCardResponder.h; sourceTree = "<group>"; };
 		1E4999C11E89B6630022D886 /* ATLMRESTEndpoint.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ATLMRESTEndpoint.h; sourceTree = "<group>"; };
 		1E8D72201E862EB2000E058A /* ATLMSchedulingCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMSchedulingCard.h; sourceTree = "<group>"; };
@@ -460,6 +463,8 @@
 		251D8DB11A9688C40000BFA2 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				1E4999BD1E8712EF0022D886 /* ATLMCardResponseCollectionViewCell.h */,
+				1E4999BE1E8712EF0022D886 /* ATLMCardResponseCollectionViewCell.m */,
 				251D8DB21A9688C40000BFA2 /* ATLLogoView.h */,
 				251D8DB31A9688C40000BFA2 /* ATLLogoView.m */,
 				251D8DB41A9688C40000BFA2 /* ATLMCenterTextTableViewCell.h */,
@@ -885,6 +890,7 @@
 				1E8D722D1E862F1A000E058A /* ATLMTextPollCardCollectionViewCell.m in Sources */,
 				251D8DC61A9688C50000BFA2 /* ATLMMediaViewController.m in Sources */,
 				251D8DCF1A9688C50000BFA2 /* ATLMConstants.m in Sources */,
+				1E4999BF1E8712EF0022D886 /* ATLMCardResponseCollectionViewCell.m in Sources */,
 				AA1DC2791E3C05060034CFD5 /* ATLMLocationViewController.m in Sources */,
 				251D8DDA1A9688C50000BFA2 /* ATLMStyleValue1TableViewCell.m in Sources */,
 				1E8D72241E862EB2000E058A /* ATLMSchedulingCard.m in Sources */,
