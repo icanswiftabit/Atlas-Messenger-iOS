@@ -12,6 +12,7 @@
 #import "ATLMSchedulingCardCollectionViewCell.h"
 #import "ATLMSchedulingCard.h"
 #import "ATLMLayerController.h"
+#import "ATLMCardResponse.h"
 
 NS_ASSUME_NONNULL_BEGIN     // {
 
@@ -578,6 +579,12 @@ ATLMSchedulingCardCollectionViewCellDirectionFont(void) {
                                 if ([json isKindOfClass:[NSDictionary class]]) {
                                     succeeded = [[json objectForKey:@"ok"] boolValue];
                                     if (succeeded) {
+                                        succeeded = [ATLMCardResponse sendCardResponseWithPayloadData:data
+                                                                                    supplementalParts:nil
+                                                                                              forCard:card
+                                                                                               client:client
+                                                                                              options:nil
+                                                                                                error:&err];
                                         
                                         // **FIXME** This should realy inform the user of any failure
                                         if (nil != err) {
