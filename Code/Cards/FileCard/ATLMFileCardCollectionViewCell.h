@@ -18,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN     // {
 #if 0
 #pragma mark -
 #endif
+
 @interface ATLMFileCardCollectionViewCell : ATLBaseCollectionViewCell <ATLMCardPresenting>
 
 @end
