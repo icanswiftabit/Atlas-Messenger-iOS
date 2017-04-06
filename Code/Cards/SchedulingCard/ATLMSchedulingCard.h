@@ -16,6 +16,13 @@ NS_ASSUME_NONNULL_BEGIN     // {
 
 
 #if 0
+#pragma mark - Functions
+#endif
+
+extern NSDateFormatter* ATLMSchedulingCardISODateFormatter(void);
+
+
+#if 0
 #pragma mark -
 #endif
 

@@ -65,8 +65,8 @@ static NSString * const ATLMSchedulingCardJSONDateRangeEndKey = @"end";
 #pragma mark - Functions
 #endif
 
-static NSDateFormatter*
-ATLMISODateFormatter(void) {
+/* extern */ NSDateFormatter*
+ATLMSchedulingCardISODateFormatter(void) {
     
     // NOTE this date formatter never needs to be reset.  It is fixed at GMT
     // and on en/US in order to remain ISO compliant.
@@ -127,7 +127,7 @@ ATLMISODateFormatter(void) {
     NSArray<ATLMSchedulingCardDateRange *> *result = nil;
     NSArray<NSDictionary<NSString *, NSString *> *> *ranges = [[self payloadJSON] objectForKey:ATLMSchedulingCardJSONDatesKey];
     
-    NSDateFormatter *formatter = ATLMISODateFormatter();
+    NSDateFormatter *formatter = ATLMSchedulingCardISODateFormatter();
     for (NSDictionary *range in ranges) {
         NSString *date = [range objectForKey:ATLMSchedulingCardJSONDateRangeStartKey];
         if (0 == [date length]) continue;
@@ -192,7 +192,7 @@ ATLMISODateFormatter(void) {
     }
     
     NSMutableArray *items = [dates mutableCopy];
-    NSDateFormatter *formatter = ATLMISODateFormatter();
+    NSDateFormatter *formatter = ATLMSchedulingCardISODateFormatter();
     [dates enumerateObjectsUsingBlock:^(ATLMSchedulingCardDateRange * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         [items replaceObjectAtIndex:idx withObject:@{ATLMSchedulingCardJSONDateRangeStartKey:[formatter stringFromDate:[obj startDate]],
                                                      ATLMSchedulingCardJSONDateRangeEndKey:[formatter stringFromDate:[obj endDate]]}];
