@@ -298,10 +298,10 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
         
         BOOL isOutgoing = [self.layerClient.authenticatedUser.userID isEqualToString:message.sender.userID];
         [abcvc configureCellForType:(isOutgoing ? ATLOutgoingCellType : ATLIncomingCellType)];
-        
-        if ([abcvc conformsToProtocol:@protocol(ATLMCardResponder)] && [abcvc respondsToSelector:@selector(setLayerController:)]) {
-            [(id<ATLMCardResponder>)abcvc setLayerController:[self layerController]];
-        }        
+    }
+    
+    if ([cell conformsToProtocol:@protocol(ATLMCardResponder)] && [cell respondsToSelector:@selector(setLayerController:)]) {
+        [(id<ATLMCardResponder>)cell setLayerController:[self layerController]];
     }
 }
 
