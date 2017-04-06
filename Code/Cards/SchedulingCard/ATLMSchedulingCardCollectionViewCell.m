@@ -531,7 +531,7 @@ ATLMSchedulingCardCollectionViewCellDirectionFont(void) {
 - (void)sendResponse:(id)sender {
     
     if (nil == [self task]) {
-        ATLMCard *card = [self card];
+        ATLMSchedulingCard *card = [self card];
         ATLMLayerController *controller = [self layerController];
         LYRClient *client = [controller layerClient];
         if ((nil != card) && (nil != controller) && (nil != client)) {
@@ -541,19 +541,25 @@ ATLMSchedulingCardCollectionViewCellDirectionFont(void) {
             NSURL *baseURL = [endpoint baseURL];
             if ((nil != session) && (nil != baseURL)) {
                 
+                NSInteger tag = [sender tag];
                 NSNumber *choice = @([sender tag]);
-                NSArray *payload = @[@{@"operation":@"set",
-                                       @"property":[NSString stringWithFormat:@"votes.%@", [[client authenticatedUser] userID]],
-                                       @"value":choice}];
+                ATLMSchedulingCardDateRange *range = [[card dates] objectAtIndex:tag];
+                
+                NSDateFormatter *formatter = ATLMSchedulingCardISODateFormatter();
+                NSDictionary *payload = @{@"messageID":[[[self message] identifier] absoluteString],
+                                          @"selectedIndex":choice,
+                                          @"title":[card title],
+                                          @"start":[formatter stringFromDate:[range startDate]],
+                                          @"end":[formatter stringFromDate:[range endDate]]};
+                
                 NSData *data = [NSJSONSerialization dataWithJSONObject:payload options:0 error:NULL];
                 
                 [self setVote:choice];
                 
                 __weak typeof(self) wSelf = self;
-                NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"/message/%@", [[[card message] identifier] lastPathComponent]]
-                                    relativeToURL:baseURL];
+                NSURL *url = [NSURL URLWithString:@"/scheduleEvent" relativeToURL:baseURL];
                 NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
-                [request setHTTPMethod:@"PATCH"];
+                [request setHTTPMethod:@"POST"];
                 [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
                 [request setHTTPBody:data];
                 
