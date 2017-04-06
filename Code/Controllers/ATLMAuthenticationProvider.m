@@ -251,6 +251,17 @@ NSString *const ATLMListUsersEndpoint = @"/users.json";
             return;
         }
         
+        NSNumber *ok = [rawResponse objectForKey:@"ok"];
+        if ((nil != ok) && (![ok isKindOfClass:[NSNumber class]] || (1 != [ok integerValue]))) {
+            NSError *error = [NSError errorWithDomain:ATLMErrorDomain code:ATLMInvalidPassword userInfo:@{NSLocalizedDescriptionKey: [rawResponse objectForKey:@"error"]}];
+            [[NSUserDefaults standardUserDefaults] removeObjectForKey:ATLMCredentialsKey];
+            [[NSUserDefaults standardUserDefaults] removeObjectForKey:ATLMSessionTokenKey];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completion(nil, error);
+            });
+            return;
+        }
+             
         NSString *token = rawResponse[@"token"];
         [[NSUserDefaults standardUserDefaults] setValue:credentials forKey:ATLMCredentialsKey];
         [[NSUserDefaults standardUserDefaults] setValue:token forKey:ATLMSessionTokenKey];
