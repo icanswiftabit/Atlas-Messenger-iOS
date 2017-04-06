@@ -29,6 +29,7 @@
 NSString *const ATLMEmailKey = @"ATLMEmailKey";
 NSString *const ATLMPasswordKey = @"ATLMPasswordKey";
 NSString *const ATLMCredentialsKey = @"ATLMCredentialsKey";
+static NSString *const ATLMSessionTokenKey = @"ATLMSessionTokenKey";
 static NSString *const ATLMAtlasIdentityTokenKey = @"identity_token";
 
 NSString *const ATLMAuthenticatedEndpoint = @"/login";
@@ -74,6 +75,7 @@ NSString *const ATLMListUsersEndpoint = @"/users.json";
     if (self) {
         _baseURL = baseURL;
         _layerAppID = layerAppID;
+        [self setAuthorization:[[NSUserDefaults standardUserDefaults] stringForKey:ATLMSessionTokenKey]];
     }
     return self;
 }
@@ -170,7 +172,7 @@ NSString *const ATLMListUsersEndpoint = @"/users.json";
                         
                         if (200 == [(NSHTTPURLResponse*)response statusCode]) {
                             dispatch_async(dispatch_get_main_queue(), ^{
-                                [sSelf setAuthorization:authorization];
+                                [sSelf setAuthorization:token];
                             });
                         }
                         else {
@@ -239,9 +241,6 @@ NSString *const ATLMListUsersEndpoint = @"/users.json";
             return;
         }
         
-        [[NSUserDefaults standardUserDefaults] setValue:credentials forKey:ATLMCredentialsKey];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-        
         // TODO: Basic response and content checks — status and length
         NSError *serializationError;
         NSDictionary *rawResponse = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:data options:0 error:&serializationError];
@@ -253,6 +252,10 @@ NSString *const ATLMListUsersEndpoint = @"/users.json";
         }
         
         NSString *token = rawResponse[@"token"];
+        [[NSUserDefaults standardUserDefaults] setValue:credentials forKey:ATLMCredentialsKey];
+        [[NSUserDefaults standardUserDefaults] setValue:token forKey:ATLMSessionTokenKey];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+
         dispatch_async(dispatch_get_main_queue(), ^{
             [self authenticateToken:token nonce:nonce completion:completion];
         });
