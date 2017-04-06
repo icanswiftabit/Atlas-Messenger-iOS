@@ -241,6 +241,8 @@ ATLMTextPollCardCollectionViewCellDirectionFont(void) {
         [super setMessage:message];
         
         [self setCard:nil];
+        
+        [self setTask:nil];
         [self synchronize];
         
         for (LYRMessagePart *part in [message parts]) {
