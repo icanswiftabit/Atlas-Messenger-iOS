@@ -579,7 +579,8 @@ ATLMSchedulingCardCollectionViewCellDirectionFont(void) {
                                 if ([json isKindOfClass:[NSDictionary class]]) {
                                     succeeded = [[json objectForKey:@"ok"] boolValue];
                                     if (succeeded) {
-                                        succeeded = [ATLMCardResponse sendCardResponseWithPayloadData:data
+                                        
+                                        succeeded = [ATLMCardResponse sendCardResponseWithPayloadData:[NSJSONSerialization dataWithJSONObject:[json objectForKey:@"patch"] options:0 error:NULL]
                                                                                     supplementalParts:nil
                                                                                               forCard:card
                                                                                                client:client
