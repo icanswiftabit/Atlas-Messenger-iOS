@@ -300,7 +300,9 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
         parts = ((1 == count) ? nil : [parts subarrayWithRange:NSMakeRange(1, count - 1)]);
         ATLMCardResponse *response = [ATLMCardResponse cardResponseWithMessagePart:initial supplementalParts:parts];
         if (nil != response) {
-            result = [ATLMCardResponseCollectionViewCell cellSizeForMessage:message withCellWidth:cellWidth].height;
+            result = [ATLMCardResponseCollectionViewCell cellSizeForCardResponse:response
+                                                             fromLayerController:[self layerController]
+                                                                   withCellWidth:cellWidth].height;
         }
     }
     
@@ -319,6 +321,9 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
     
     if ([cell conformsToProtocol:@protocol(ATLMCardResponder)] && [cell respondsToSelector:@selector(setLayerController:)]) {
         [(id<ATLMCardResponder>)cell setLayerController:[self layerController]];
+    }
+    else if ([cell isKindOfClass:[ATLMCardResponseCollectionViewCell class]]) {
+        [(ATLMCardResponseCollectionViewCell*)cell setLayerController:[self layerController]];
     }
 }
 

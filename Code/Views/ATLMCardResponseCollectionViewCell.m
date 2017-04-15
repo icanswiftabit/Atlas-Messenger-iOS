@@ -12,6 +12,7 @@
 
 #import "ATLMCardResponseCollectionViewCell.h"
 #import "ATLMCardResponse.h"
+#import "ATLMLayerController.h"
 
 NS_ASSUME_NONNULL_BEGIN     // {
 
@@ -25,6 +26,8 @@ NS_ASSUME_NONNULL_BEGIN     // {
 @property (nonatomic, strong, readonly) UILabel *label;
 
 - (void)lyr_CommonInit;
+
++ (NSString*)labelForCardResponse:(ATLMCardResponse *)response fromLayerController:(ATLMLayerController *)layerController;
 
 @end
 
@@ -69,21 +72,53 @@ NS_ASSUME_NONNULL_BEGIN     // {
     
     ATLMCardResponse *existing = [self response];
     if ((response != existing) && ![existing isEqualToCardResponse:response]) {
-        [[self label] setText:@"Someone responded to a message from someone else."];
-        
-        // **FIXME** Remove debugging code
-//        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(15.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//            (void)[[[response payloadPart] message] delete:(LYRDeletionModeAllParticipants) error:NULL];
-//        });
+        _response = response;
+        [[self label] setText:[[self class] labelForCardResponse:_response fromLayerController:[self layerController]]];
     }
 }
 
-+ (CGSize)cellSizeForMessage:(LYRMessage *)message withCellWidth:(CGFloat)cellWidth {
+- (void)setLayerController:(nullable ATLMLayerController *)layerController {
     
+    ATLMLayerController *existing = [self layerController];
+    if ((layerController != existing) && ![existing isEqual:layerController]) {
+        _layerController = layerController;
+        [[self label] setText:[[self class] labelForCardResponse:[self response] fromLayerController:_layerController]];
+    }
+}
+
++ (NSString*)labelForCardResponse:(ATLMCardResponse *)response fromLayerController:(ATLMLayerController *)layerController {
+    
+    LYRIdentity *me = [[layerController layerClient] authenticatedUser];
+    
+    NSString *args[2];
+    LYRIdentity *senders[2] = {
+        [[[response payloadPart] message] sender],
+        [[layerController messageForIdentifier:[response cardIdentifier]] sender]
+    };
+    
+    for (size_t i = 0; i < (sizeof(senders) / sizeof(senders[0])); i++) {
+        if ([senders[i] isEqual:me]) {
+            args[i] = ((0 == i) ? @"You" : @"you");
+        }
+        else {
+            args[i] = [senders[i] displayName];
+            if (0 == [args[i] length]) {
+                args[i] = ((0 == i) ? @"Someone" : @"someone");
+            }
+        }
+    }
+    
+    return [NSString stringWithFormat:@"%@ responded to a message from %@.", args[0], args[1]];
+}
+
++ (CGSize)cellSizeForCardResponse:(ATLMCardResponse *)response
+              fromLayerController:(ATLMLayerController *)layerController
+                    withCellWidth:(CGFloat)cellWidth
+{
     CGSize sz = CGSizeMake(cellWidth, CGFLOAT_MAX);
     sz.width -= 40.0;
     
-    NSString *label = @"Someone responded to a message from someone else.";
+    NSString *label = [self labelForCardResponse:response fromLayerController:layerController];
     CGRect result = CGRectIntegral([label boundingRectWithSize:sz
                                                        options:(NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading)
                                                     attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:11.0]}

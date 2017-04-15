@@ -19,13 +19,16 @@ NS_ASSUME_NONNULL_BEGIN     // {
 #endif
 
 // Forward declarations
-@class LYRClient;
 @class ATLMCardResponse;
+@class ATLMLayerController;
 
 @interface ATLMCardResponseCollectionViewCell : UICollectionViewCell <ATLMessagePresenting>
 @property (nonatomic, strong, readonly, nullable) ATLMCardResponse *response;
+@property (nonatomic, weak, readwrite, nullable) ATLMLayerController *layerController;
 
-+ (CGSize)cellSizeForMessage:(LYRMessage *)message withCellWidth:(CGFloat)cellWidth;
++ (CGSize)cellSizeForCardResponse:(ATLMCardResponse *)response
+              fromLayerController:(ATLMLayerController *)layerController
+                    withCellWidth:(CGFloat)cellWidth;
 
 @end
 
