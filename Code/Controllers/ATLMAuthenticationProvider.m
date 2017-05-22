@@ -29,14 +29,19 @@
 NSString *const ATLMEmailKey = @"ATLMEmailKey";
 NSString *const ATLMPasswordKey = @"ATLMPasswordKey";
 NSString *const ATLMCredentialsKey = @"ATLMCredentialsKey";
+static NSString *const ATLMSessionTokenKey = @"ATLMSessionTokenKey";
 static NSString *const ATLMAtlasIdentityTokenKey = @"identity_token";
-
+NSString *const ATLMAuthenticatedEndpoint = @"/login";
 NSString *const ATLMListUsersEndpoint = @"/users.json";
 
 @interface ATLMAuthenticationProvider ();
 
 @property (nonatomic) NSURL *baseURL;
 @property (nonatomic) NSURLSession *URLSession;
+
+@property (nonatomic, copy, readwrite, nullable) NSString *authorization;
+
+- (void)authenticateToken:(NSString*)token nonce:(NSString *)nonce completion:(void (^)(NSString *identityToken, NSError *error))completion;
 
 @end
 
@@ -76,6 +81,8 @@ NSString *const ATLMListUsersEndpoint = @"/users.json";
         configuration.HTTPAdditionalHeaders = @{ @"Accept": @"application/json",
                                                  @"X_LAYER_APP_ID": self.layerAppID.absoluteString.lastPathComponent };
         _URLSession = [NSURLSession sessionWithConfiguration:configuration];
+        
+        [self setAuthorization:[[NSUserDefaults standardUserDefaults] stringForKey:ATLMSessionTokenKey]];
     }
     return self;
 }
@@ -85,6 +92,135 @@ NSString *const ATLMListUsersEndpoint = @"/users.json";
     @throw [NSException exceptionWithName:NSInternalInconsistencyException
                                    reason:@"Failed to call designated initializer. Call the designated initializer on the subclass instead."
                                  userInfo:nil];
+}
+
+- (nullable NSURLSession*)URLSession {
+    
+    if (nil == _URLSession) {
+        
+        NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration ephemeralSessionConfiguration];
+        
+        NSMutableArray *components = [[NSLocale preferredLanguages] mutableCopy];
+        NSUInteger count = [components count];
+        
+        static const NSUInteger limit = 6;
+        if (limit < count) {
+            [components removeObjectsInRange:NSMakeRange(limit, count - limit)];
+            count = limit;
+        }
+        
+        for (NSUInteger i = 1; i < count; i++) {
+            [components replaceObjectAtIndex:i withObject:[[components objectAtIndex:i] stringByAppendingFormat:@";q=%0.1g", (1.0 - (0.1 * i))]];
+        }
+        
+        NSDictionary *info = [[NSBundle mainBundle] infoDictionary];
+        UIDevice *device = [UIDevice currentDevice];
+        
+        NSString *agent = [NSString stringWithFormat:@"%@; %@; %@ %@", info[@"CFBundleName"], device.model, device.systemName, device.systemVersion];
+
+        NSDictionary *headers = @{@"Accept": @"application/json",
+                                  @"X_LAYER_APP_ID": self.layerAppID.absoluteString,
+                                  @"User-Agent": agent,
+                                  @"Accept-Language": [components componentsJoinedByString:@","]};
+        
+        NSString *authorization = [self authorization];
+        if (0 != [authorization length]) {
+            NSMutableDictionary *cp = [headers mutableCopy];
+            [cp setObject:authorization forKey:@"Authorization"];
+            headers = cp;
+        }
+        
+        [configuration setHTTPAdditionalHeaders:headers];
+        _URLSession = [NSURLSession sessionWithConfiguration:configuration];
+    }
+    
+    return _URLSession;
+}
+
+- (void)setAuthorization:(nullable NSString *)authorization {
+    
+    if (![authorization isEqualToString:[self authorization]]) {
+        _authorization = [authorization copy];
+        [self setURLSession:nil];
+    }
+}
+
+- (void)authenticateToken:(NSString*)token nonce:(NSString *)nonce completion:(void (^)(NSString *identityToken, NSError *error))completion {
+    
+    NSURL *url = [NSURL URLWithString:@"layer_authenticate" relativeToURL:[self baseURL]];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url
+                                                                cachePolicy:NSURLRequestReloadIgnoringLocalCacheData
+                                                            timeoutInterval:DBL_MAX];
+    
+    [request setHTTPMethod:@"POST"];
+    
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    
+    NSDictionary *body = @{@"session_token":token, @"nonce":nonce};
+    
+    [request setHTTPBody:[NSJSONSerialization dataWithJSONObject:body options:0 error:NULL]];
+    
+    NSURLSessionDataTask *task;
+    __weak typeof(self) wSelf = self;
+    task = [[self URLSession] dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        __strong typeof(wSelf) sSelf = wSelf;
+        if (nil != sSelf) {
+            
+            NSString *authorization = nil;
+            
+            if (nil == error) {
+                NSDictionary *result = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&error];
+                NSInteger code = 0;
+                if ([result isKindOfClass:[NSDictionary class]]) {
+                    
+                    authorization = [result objectForKey:ATLMAtlasIdentityTokenKey];
+                    
+                    if ([authorization isKindOfClass:[NSString class]] && (0 < [authorization length])) {
+                        
+                        if (200 == [(NSHTTPURLResponse*)response statusCode]) {
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                [sSelf setAuthorization:token];
+                            });
+                        }
+                        else {
+                            code = NSURLErrorUnknown;
+                        }
+                    }
+                    else {
+                        authorization = nil;
+                        code = NSURLErrorBadServerResponse;
+                    }
+                }
+                
+                else {
+                    code = NSURLErrorBadServerResponse;
+                }
+                
+                if (0 != code) {
+                    error = [NSError errorWithDomain:NSURLErrorDomain
+                                                code:code
+                                            userInfo:@{NSURLErrorFailingURLErrorKey:url,
+                                                       NSURLErrorFailingURLStringErrorKey:[url absoluteString]}];
+                }
+            }
+            
+            if (NULL != completion) {
+                
+                if ((nil == token) && (nil == error)) {
+                    error = [NSError errorWithDomain:NSURLErrorDomain
+                                                code:NSURLErrorBadServerResponse
+                                            userInfo:@{NSURLErrorFailingURLErrorKey:url,
+                                                       NSURLErrorFailingURLStringErrorKey:[url absoluteString]}];
+                }
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    completion(((nil == error) ? authorization : nil), error);
+                });
+            }
+        }
+    }];
+    
+    [task resume];
 }
 
 - (void)authenticateWithCredentials:(NSDictionary *)credentials nonce:(NSString *)nonce completion:(void (^)(NSString *identityToken, NSError *error))completion
@@ -115,9 +251,6 @@ NSString *const ATLMListUsersEndpoint = @"/users.json";
             return;
         }
         
-        [[NSUserDefaults standardUserDefaults] setValue:credentials forKey:ATLMCredentialsKey];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-        
         // TODO: Basic response and content checks — status and length
         NSError *serializationError;
         NSDictionary *rawResponse = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:data options:0 error:&serializationError];
@@ -129,9 +262,26 @@ NSString *const ATLMListUsersEndpoint = @"/users.json";
         }
         
         // Legacy identity provider uses layer_identity_token
-        NSString *identityToken = rawResponse[@"identity_token"] ?: rawResponse[@"layer_identity_token"];
+        //NSString *identityToken = rawResponse[@"identity_token"] ?: rawResponse[@"layer_identity_token"];
+        
+        NSNumber *ok = [rawResponse objectForKey:@"ok"];
+        if ((nil != ok) && (![ok isKindOfClass:[NSNumber class]] || (1 != [ok integerValue]))) {
+            NSError *error = [NSError errorWithDomain:ATLMErrorDomain code:ATLMInvalidPassword userInfo:@{NSLocalizedDescriptionKey: [rawResponse objectForKey:@"error"]}];
+            [[NSUserDefaults standardUserDefaults] removeObjectForKey:ATLMCredentialsKey];
+            [[NSUserDefaults standardUserDefaults] removeObjectForKey:ATLMSessionTokenKey];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completion(nil, error);
+            });
+            return;
+        }
+             
+        NSString *token = rawResponse[@"token"];
+        [[NSUserDefaults standardUserDefaults] setValue:credentials forKey:ATLMCredentialsKey];
+        [[NSUserDefaults standardUserDefaults] setValue:token forKey:ATLMSessionTokenKey];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        
         dispatch_async(dispatch_get_main_queue(), ^{
-            completion(identityToken, nil);
+            [self authenticateToken:token nonce:nonce completion:completion];
         });
     }] resume];
 }

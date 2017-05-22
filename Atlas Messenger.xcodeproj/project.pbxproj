@@ -23,6 +23,21 @@
 		0AADB5D01947C8800083732B /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AADB5CF1947C8800083732B /* Security.framework */; };
 		0AADB5D41947C88B0083732B /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AADB5D31947C88B0083732B /* SystemConfiguration.framework */; };
 		0ABEFFAF196B7686006FFFF3 /* logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0ABEFFAE196B7686006FFFF3 /* logo@2x.png */; };
+		1E099A5C1E6E400300C8DA1F /* ATLMCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E099A541E6E400300C8DA1F /* ATLMCard.m */; };
+		1E4999AD1E86E83C0022D886 /* TextPollIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 1E4999AA1E86E83C0022D886 /* TextPollIcon.png */; };
+		1E4999AE1E86E83C0022D886 /* TextPollIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1E4999AB1E86E83C0022D886 /* TextPollIcon@2x.png */; };
+		1E4999AF1E86E83C0022D886 /* TextPollIcon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1E4999AC1E86E83C0022D886 /* TextPollIcon@3x.png */; };
+		1E4999B41E86EF510022D886 /* SchedulingIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 1E4999B11E86EF510022D886 /* SchedulingIcon.png */; };
+		1E4999B51E86EF510022D886 /* SchedulingIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1E4999B21E86EF510022D886 /* SchedulingIcon@2x.png */; };
+		1E4999B61E86EF510022D886 /* SchedulingIcon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1E4999B31E86EF510022D886 /* SchedulingIcon@3x.png */; };
+		1E4999BC1E870A5C0022D886 /* ATLMCardResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E4999BB1E870A5C0022D886 /* ATLMCardResponse.m */; };
+		1E4999BF1E8712EF0022D886 /* ATLMCardResponseCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E4999BE1E8712EF0022D886 /* ATLMCardResponseCollectionViewCell.m */; };
+		1E8D72241E862EB2000E058A /* ATLMSchedulingCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E8D72211E862EB2000E058A /* ATLMSchedulingCard.m */; };
+		1E8D72251E862EB2000E058A /* ATLMSchedulingCardCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E8D72231E862EB2000E058A /* ATLMSchedulingCardCollectionViewCell.m */; };
+		1E8D722C1E862F1A000E058A /* ATLMTextPollCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E8D72291E862F1A000E058A /* ATLMTextPollCard.m */; };
+		1E8D722D1E862F1A000E058A /* ATLMTextPollCardCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E8D722B1E862F1A000E058A /* ATLMTextPollCardCollectionViewCell.m */; };
+		1EA4E7FA1E8EB1AA00C34971 /* ATLMFileCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EA4E7F91E8EB1AA00C34971 /* ATLMFileCard.m */; };
+		1EA4E7FD1E8EB52F00C34971 /* ATLMFileCardCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EA4E7FC1E8EB52F00C34971 /* ATLMFileCardCollectionViewCell.m */; };
 		251D8DC01A9688C50000BFA2 /* ATLMAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 251D8D851A9688C40000BFA2 /* ATLMAppDelegate.m */; };
 		251D8DC21A9688C50000BFA2 /* ATLMLayerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 251D8D8A1A9688C40000BFA2 /* ATLMLayerController.m */; };
 		251D8DC31A9688C50000BFA2 /* ATLMConversationDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 251D8D8C1A9688C40000BFA2 /* ATLMConversationDetailViewController.m */; };
@@ -122,6 +137,35 @@
 		0AADB5D31947C88B0083732B /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		0AB05019196E24F00029BC1B /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		0ABEFFAE196B7686006FFFF3 /* logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo@2x.png"; sourceTree = "<group>"; };
+		1E099A531E6E400300C8DA1F /* ATLMCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMCard.h; sourceTree = "<group>"; };
+		1E099A541E6E400300C8DA1F /* ATLMCard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMCard.m; sourceTree = "<group>"; };
+		1E099A571E6E400300C8DA1F /* ATLMCardSubclass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMCardSubclass.h; sourceTree = "<group>"; };
+		1E4999AA1E86E83C0022D886 /* TextPollIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TextPollIcon.png; sourceTree = "<group>"; };
+		1E4999AB1E86E83C0022D886 /* TextPollIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TextPollIcon@2x.png"; sourceTree = "<group>"; };
+		1E4999AC1E86E83C0022D886 /* TextPollIcon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TextPollIcon@3x.png"; sourceTree = "<group>"; };
+		1E4999B11E86EF510022D886 /* SchedulingIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SchedulingIcon.png; sourceTree = "<group>"; };
+		1E4999B21E86EF510022D886 /* SchedulingIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SchedulingIcon@2x.png"; sourceTree = "<group>"; };
+		1E4999B31E86EF510022D886 /* SchedulingIcon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SchedulingIcon@3x.png"; sourceTree = "<group>"; };
+		1E4999BA1E870A5C0022D886 /* ATLMCardResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMCardResponse.h; sourceTree = "<group>"; };
+		1E4999BB1E870A5C0022D886 /* ATLMCardResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMCardResponse.m; sourceTree = "<group>"; };
+		1E4999BD1E8712EF0022D886 /* ATLMCardResponseCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMCardResponseCollectionViewCell.h; sourceTree = "<group>"; };
+		1E4999BE1E8712EF0022D886 /* ATLMCardResponseCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMCardResponseCollectionViewCell.m; sourceTree = "<group>"; };
+		1E4999C01E897CB20022D886 /* ATLMCardResponder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ATLMCardResponder.h; sourceTree = "<group>"; };
+		1E4999C11E89B6630022D886 /* ATLMRESTEndpoint.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ATLMRESTEndpoint.h; sourceTree = "<group>"; };
+		1E8D72201E862EB2000E058A /* ATLMSchedulingCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMSchedulingCard.h; sourceTree = "<group>"; };
+		1E8D72211E862EB2000E058A /* ATLMSchedulingCard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMSchedulingCard.m; sourceTree = "<group>"; };
+		1E8D72221E862EB2000E058A /* ATLMSchedulingCardCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMSchedulingCardCollectionViewCell.h; sourceTree = "<group>"; };
+		1E8D72231E862EB2000E058A /* ATLMSchedulingCardCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMSchedulingCardCollectionViewCell.m; sourceTree = "<group>"; };
+		1E8D72281E862F1A000E058A /* ATLMTextPollCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMTextPollCard.h; sourceTree = "<group>"; };
+		1E8D72291E862F1A000E058A /* ATLMTextPollCard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMTextPollCard.m; sourceTree = "<group>"; };
+		1E8D722A1E862F1A000E058A /* ATLMTextPollCardCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMTextPollCardCollectionViewCell.h; sourceTree = "<group>"; };
+		1E8D722B1E862F1A000E058A /* ATLMTextPollCardCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMTextPollCardCollectionViewCell.m; sourceTree = "<group>"; };
+		1E9B4ACB1E7990E200B8BBAB /* ATLMCardCellPresentable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMCardCellPresentable.h; sourceTree = "<group>"; };
+		1E9B4ACF1E79E20000B8BBAB /* ATLMCardPresenting.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ATLMCardPresenting.h; sourceTree = "<group>"; };
+		1EA4E7F81E8EB1AA00C34971 /* ATLMFileCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMFileCard.h; sourceTree = "<group>"; };
+		1EA4E7F91E8EB1AA00C34971 /* ATLMFileCard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMFileCard.m; sourceTree = "<group>"; };
+		1EA4E7FB1E8EB52F00C34971 /* ATLMFileCardCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMFileCardCollectionViewCell.h; sourceTree = "<group>"; };
+		1EA4E7FC1E8EB52F00C34971 /* ATLMFileCardCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMFileCardCollectionViewCell.m; sourceTree = "<group>"; };
 		251D8D841A9688C40000BFA2 /* ATLMAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMAppDelegate.h; sourceTree = "<group>"; };
 		251D8D851A9688C40000BFA2 /* ATLMAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMAppDelegate.m; sourceTree = "<group>"; };
 		251D8D891A9688C40000BFA2 /* ATLMLayerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMLayerController.h; sourceTree = "<group>"; };
@@ -318,6 +362,72 @@
 			path = Icons;
 			sourceTree = "<group>";
 		};
+		1E4999A91E86E83C0022D886 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				1E4999AA1E86E83C0022D886 /* TextPollIcon.png */,
+				1E4999AB1E86E83C0022D886 /* TextPollIcon@2x.png */,
+				1E4999AC1E86E83C0022D886 /* TextPollIcon@3x.png */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		1E4999B01E86EF510022D886 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				1E4999B11E86EF510022D886 /* SchedulingIcon.png */,
+				1E4999B21E86EF510022D886 /* SchedulingIcon@2x.png */,
+				1E4999B31E86EF510022D886 /* SchedulingIcon@3x.png */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		1E8D72261E862EBB000E058A /* SchedulingCard */ = {
+			isa = PBXGroup;
+			children = (
+				1E8D72201E862EB2000E058A /* ATLMSchedulingCard.h */,
+				1E8D72211E862EB2000E058A /* ATLMSchedulingCard.m */,
+				1E8D72221E862EB2000E058A /* ATLMSchedulingCardCollectionViewCell.h */,
+				1E8D72231E862EB2000E058A /* ATLMSchedulingCardCollectionViewCell.m */,
+				1E4999B01E86EF510022D886 /* Resources */,
+			);
+			path = SchedulingCard;
+			sourceTree = "<group>";
+		};
+		1E8D72271E862ED2000E058A /* Cards */ = {
+			isa = PBXGroup;
+			children = (
+				1EA4E7F71E8EB16400C34971 /* FileCard */,
+				1E8D722E1E862F22000E058A /* TextPoll */,
+				1E8D72261E862EBB000E058A /* SchedulingCard */,
+			);
+			path = Cards;
+			sourceTree = "<group>";
+		};
+		1E8D722E1E862F22000E058A /* TextPoll */ = {
+			isa = PBXGroup;
+			children = (
+				1E8D72281E862F1A000E058A /* ATLMTextPollCard.h */,
+				1E8D72291E862F1A000E058A /* ATLMTextPollCard.m */,
+				1E8D722A1E862F1A000E058A /* ATLMTextPollCardCollectionViewCell.h */,
+				1E8D722B1E862F1A000E058A /* ATLMTextPollCardCollectionViewCell.m */,
+				1E4999A91E86E83C0022D886 /* Resources */,
+			);
+			name = TextPoll;
+			path = TextPollCard;
+			sourceTree = "<group>";
+		};
+		1EA4E7F71E8EB16400C34971 /* FileCard */ = {
+			isa = PBXGroup;
+			children = (
+				1EA4E7F81E8EB1AA00C34971 /* ATLMFileCard.h */,
+				1EA4E7F91E8EB1AA00C34971 /* ATLMFileCard.m */,
+				1EA4E7FB1E8EB52F00C34971 /* ATLMFileCardCollectionViewCell.h */,
+				1EA4E7FC1E8EB52F00C34971 /* ATLMFileCardCollectionViewCell.m */,
+			);
+			path = FileCard;
+			sourceTree = "<group>";
+		};
 		251D8D861A9688C40000BFA2 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -371,6 +481,8 @@
 		251D8DB11A9688C40000BFA2 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				1E4999BD1E8712EF0022D886 /* ATLMCardResponseCollectionViewCell.h */,
+				1E4999BE1E8712EF0022D886 /* ATLMCardResponseCollectionViewCell.m */,
 				251D8DB21A9688C40000BFA2 /* ATLLogoView.h */,
 				251D8DB31A9688C40000BFA2 /* ATLLogoView.m */,
 				251D8DB41A9688C40000BFA2 /* ATLMCenterTextTableViewCell.h */,
@@ -392,6 +504,7 @@
 		259A57111950EB76000E27B0 /* Code */ = {
 			isa = PBXGroup;
 			children = (
+				1E8D72271E862ED2000E058A /* Cards */,
 				251D8D861A9688C40000BFA2 /* Controllers */,
 				0A0C242519477D8F00401B74 /* Frameworks */,
 				AA441A911DD4D90300F93295 /* Models */,
@@ -462,6 +575,11 @@
 		AA441A911DD4D90300F93295 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				1E099A531E6E400300C8DA1F /* ATLMCard.h */,
+				1E099A541E6E400300C8DA1F /* ATLMCard.m */,
+				1E099A571E6E400300C8DA1F /* ATLMCardSubclass.h */,
+				1E4999BA1E870A5C0022D886 /* ATLMCardResponse.h */,
+				1E4999BB1E870A5C0022D886 /* ATLMCardResponse.m */,
 				AA441A941DD4D96900F93295 /* ATLMUserCredentials.h */,
 				AA441A921DD4D94D00F93295 /* ATLMUserCredentials.m */,
 			);
@@ -526,6 +644,10 @@
 			isa = PBXGroup;
 			children = (
 				408588491E3C09B400C7831C /* ATLMAuthenticating.h */,
+				1E9B4ACB1E7990E200B8BBAB /* ATLMCardCellPresentable.h */,
+				1E9B4ACF1E79E20000B8BBAB /* ATLMCardPresenting.h */,
+				1E4999C01E897CB20022D886 /* ATLMCardResponder.h */,
+				1E4999C11E89B6630022D886 /* ATLMRESTEndpoint.h */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -640,12 +762,18 @@
 				D62611711A98153C00F6E707 /* layer-logo-gray.png in Resources */,
 				408588511E3C0B7800C7831C /* LayerConfiguration.json in Resources */,
 				D633684F1A9D614900FBFCD3 /* atlas-splashscreen-1334.png in Resources */,
+				1E4999AF1E86E83C0022D886 /* TextPollIcon@3x.png in Resources */,
 				D62611721A98153C00F6E707 /* layer-logo-gray@3x.png in Resources */,
 				0ABEFFAF196B7686006FFFF3 /* logo@2x.png in Resources */,
+				1E4999AD1E86E83C0022D886 /* TextPollIcon.png in Resources */,
+				1E4999B41E86EF510022D886 /* SchedulingIcon.png in Resources */,
 				D62D17371A9C267C00E0EFAF /* Launch Screen.xib in Resources */,
 				D63368501A9D614900FBFCD3 /* atlas-splashscreen-1336.png in Resources */,
+				1E4999B51E86EF510022D886 /* SchedulingIcon@2x.png in Resources */,
 				D62D17351A9C22E100E0EFAF /* Images.xcassets in Resources */,
 				D626116A1A98091800F6E707 /* layer-logo.png in Resources */,
+				1E4999AE1E86E83C0022D886 /* TextPollIcon@2x.png in Resources */,
+				1E4999B61E86EF510022D886 /* SchedulingIcon@3x.png in Resources */,
 				259A57741950EB83000E27B0 /* InfoPlist.strings in Resources */,
 				D62611731A98153C00F6E707 /* layer-logo-gray@2x.png in Resources */,
 				D626116B1A98091800F6E707 /* layer-logo@3x.png in Resources */,
@@ -769,6 +897,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1E8D72251E862EB2000E058A /* ATLMSchedulingCardCollectionViewCell.m in Sources */,
 				4085884F1E3C0A9000C7831C /* ATLMAuthenticationProvider.m in Sources */,
 				D016D0FC1D20D9D900D9AA4F /* ATLMApplicationViewController.m in Sources */,
 				251D8DC21A9688C50000BFA2 /* ATLMLayerController.m in Sources */,
@@ -778,15 +907,22 @@
 				251D8DC51A9688C50000BFA2 /* ATLMConversationViewController.m in Sources */,
 				251D8DD91A9688C50000BFA2 /* ATLMSplashView.m in Sources */,
 				251D8DC01A9688C50000BFA2 /* ATLMAppDelegate.m in Sources */,
+				1E8D722D1E862F1A000E058A /* ATLMTextPollCardCollectionViewCell.m in Sources */,
 				251D8DC61A9688C50000BFA2 /* ATLMMediaViewController.m in Sources */,
 				251D8DCF1A9688C50000BFA2 /* ATLMConstants.m in Sources */,
+				1E4999BF1E8712EF0022D886 /* ATLMCardResponseCollectionViewCell.m in Sources */,
 				AA1DC2791E3C05060034CFD5 /* ATLMLocationViewController.m in Sources */,
 				251D8DDA1A9688C50000BFA2 /* ATLMStyleValue1TableViewCell.m in Sources */,
+				1E8D72241E862EB2000E058A /* ATLMSchedulingCard.m in Sources */,
 				251D8DC81A9688C50000BFA2 /* ATLMParticipantTableViewController.m in Sources */,
 				251D8DC41A9688C50000BFA2 /* ATLMConversationListViewController.m in Sources */,
+				1E8D722C1E862F1A000E058A /* ATLMTextPollCard.m in Sources */,
+				1EA4E7FD1E8EB52F00C34971 /* ATLMFileCardCollectionViewCell.m in Sources */,
+				1EA4E7FA1E8EB1AA00C34971 /* ATLMFileCard.m in Sources */,
 				251D8DD81A9688C50000BFA2 /* ATLMSettingsHeaderView.m in Sources */,
 				AA26E0FF1ECA73840004E826 /* ATLMLarryController.m in Sources */,
 				408588481E3C097700C7831C /* main.m in Sources */,
+				1E099A5C1E6E400300C8DA1F /* ATLMCard.m in Sources */,
 				251D8DD41A9688C50000BFA2 /* ATLMUtilities.m in Sources */,
 				AA441A931DD4D94D00F93295 /* ATLMUserCredentials.m in Sources */,
 				251D8DD01A9688C50000BFA2 /* ATLMErrors.m in Sources */,
@@ -797,6 +933,7 @@
 				251D8DD51A9688C50000BFA2 /* ATLLogoView.m in Sources */,
 				251D8DC71A9688C50000BFA2 /* ATLMNavigationController.m in Sources */,
 				251D8DD61A9688C50000BFA2 /* ATLMCenterTextTableViewCell.m in Sources */,
+				1E4999BC1E870A5C0022D886 /* ATLMCardResponse.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

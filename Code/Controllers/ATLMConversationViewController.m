@@ -26,6 +26,12 @@
 #import "ATLMUtilities.h"
 #import "ATLMParticipantTableViewController.h"
 #import "LYRIdentity+ATLParticipant.h"
+#import <objc/runtime.h>
+#import "ATLMCardCellPresentable.h"
+#import "ATLMCardPresenting.h"
+#import "ATLMCardResponder.h"
+#import "ATLMCardResponse.h"
+#import "ATLMCardResponseCollectionViewCell.h"
 
 static NSDateFormatter *ATLMShortTimeFormatter()
 {
@@ -127,6 +133,9 @@ static ATLMDateProximity ATLMProximityToDate(NSDate *date)
 }
 
 @interface ATLMConversationViewController () <ATLMConversationDetailViewControllerDelegate, ATLParticipantTableViewControllerDelegate>
+@property (nonatomic, copy, readwrite) NSDictionary<NSString *, Class<ATLMCardCellPesentable>> *factories;
+
+- (nullable NSString *)cardCellFactoryReuseIdentifierForMesssage:(LYRMessage *)message;
 
 @end
 
@@ -163,6 +172,28 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
     if (self.conversation) {
         [self addDetailsButton];
     }
+    
+    NSMutableDictionary *factories = [NSMutableDictionary dictionary];
+    
+    // This will automatically register all the factories in the runtime.
+    unsigned int count = 0;
+    Class *classes = objc_copyClassList(&count);
+    if (NULL != classes) {
+        for (unsigned int i = 0; i < count; i++) {
+            Class clss = classes[i];
+            if (class_conformsToProtocol(clss, @protocol(ATLMCardCellPesentable))) {
+                NSString *identifier = [NSString stringWithFormat:@"%@_%@", NSStringFromClass([self class]), NSStringFromClass(clss)];
+                [self registerClass:[clss collectionViewCellClass] forMessageCellWithReuseIdentifier:identifier];
+                [factories setObject:clss forKey:identifier];
+            }
+        }
+        free(classes);
+    }
+    
+    [self setFactories:factories];
+    
+    Class clss = [ATLMCardResponseCollectionViewCell class];
+    [self registerClass:clss forMessageCellWithReuseIdentifier:NSStringFromClass(clss)];
     
     [self configureUserInterfaceAttributes];
     [self registerNotificationObservers];
@@ -249,6 +280,51 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
     if (messagePart) {
         [self presentLocationViewControllerWithMessage:message];
         return;
+    }
+}
+
+- (CGFloat)conversationViewController:(ATLConversationViewController *)viewController heightForMessage:(LYRMessage *)message withCellWidth:(CGFloat)cellWidth
+{
+    CGFloat result = 0.0;
+    
+    NSString *identifier = [self cardCellFactoryReuseIdentifierForMesssage:message];
+    if (identifier != nil) {
+        Class<ATLMCardCellPesentable> factory = [[self factories] objectForKey:identifier];
+        result = [[factory collectionViewCellClass] cellSizeForMessage:message withCellWidth:cellWidth].height;
+    }
+    else {
+        
+        NSArray<LYRMessagePart *> *parts = [message parts];
+        
+        NSUInteger count = [parts count];
+        LYRMessagePart *initial = [parts firstObject];
+        parts = ((1 == count) ? nil : [parts subarrayWithRange:NSMakeRange(1, count - 1)]);
+        ATLMCardResponse *response = [ATLMCardResponse cardResponseWithMessagePart:initial supplementalParts:parts];
+        if (nil != response) {
+            result = [ATLMCardResponseCollectionViewCell cellSizeForCardResponse:response
+                                                             fromLayerController:[self layerController]
+                                                                   withCellWidth:cellWidth].height;
+        }
+    }
+    
+    return result;
+}
+
+- (void)conversationViewController:(ATLConversationViewController *)conversationViewController configureCell:(UICollectionViewCell<ATLMessagePresenting> *)cell forMessage:(LYRMessage *)message
+{
+    if ([cell isKindOfClass:[ATLBaseCollectionViewCell class]]) {
+        
+        ATLBaseCollectionViewCell *abcvc = (ATLBaseCollectionViewCell*)cell;
+        
+        BOOL isOutgoing = [self.layerClient.authenticatedUser.userID isEqualToString:message.sender.userID];
+        [abcvc configureCellForType:(isOutgoing ? ATLOutgoingCellType : ATLIncomingCellType)];
+    }
+    
+    if ([cell conformsToProtocol:@protocol(ATLMCardResponder)] && [cell respondsToSelector:@selector(setLayerController:)]) {
+        [(id<ATLMCardResponder>)cell setLayerController:[self layerController]];
+    }
+    else if ([cell isKindOfClass:[ATLMCardResponseCollectionViewCell class]]) {
+        [(ATLMCardResponseCollectionViewCell*)cell setLayerController:[self layerController]];
     }
 }
 
@@ -421,7 +497,26 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
 - (void)sendLarryMessage:(NSString *)messageText
 {
     NSAssert([self isLarryConversation], @"Cannot send a message as Larry from outside the Larry conversation.");
+}
+
+- (nullable NSString *)conversationViewController:(ATLConversationViewController *)viewController reuseIdentifierForMessage:(LYRMessage *)message
+{
+    NSString *result = [self cardCellFactoryReuseIdentifierForMesssage:message];
     
+    if (nil == result) {
+        
+        NSArray<LYRMessagePart *> *parts = [message parts];
+        
+        NSUInteger count = [parts count];
+        LYRMessagePart *initial = [parts firstObject];
+        parts = ((1 == count) ? nil : [parts subarrayWithRange:NSMakeRange(1, count - 1)]);
+        ATLMCardResponse *response = [ATLMCardResponse cardResponseWithMessagePart:initial supplementalParts:parts];
+        if (nil != response) {
+            result = NSStringFromClass([ATLMCardResponseCollectionViewCell class]);
+        }
+    }
+    
+    return result;
 }
 
 #pragma mark - ATLAddressBarControllerDelegate
@@ -640,6 +735,19 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
     NSString *messageText;
     
     return messageText;
+}
+    
+- (nullable NSString *)cardCellFactoryReuseIdentifierForMesssage:(LYRMessage *)message
+{
+    NSDictionary<NSString *, Class<ATLMCardCellPesentable>> *factories = [self factories];
+    for (NSString *key in factories) {
+        Class<ATLMCardCellPesentable> factory = [factories objectForKey:key];
+        if ([factory isSupportedMessage:message]) {
+            return key;
+        }
+    }
+    
+    return nil;
 }
 
 #pragma mark - Link Tap Handler
