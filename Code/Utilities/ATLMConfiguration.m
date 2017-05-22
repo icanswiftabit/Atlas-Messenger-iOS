@@ -22,6 +22,8 @@
 NSString *const ATLMConfigurationNameKey = @"name";
 NSString *const ATLMConfigurationAppIDKey = @"app_id";
 NSString *const ATLMConfigurationIdentityProviderURLKey = @"identity_provider_url";
+NSString *const ATLMConfigurationLarryUserIDKey = @"larry_user_id";
+NSString *const ATLMConfigurationApiAITokenKey = @"api_ai_token";
 
 @implementation ATLMConfiguration
 
@@ -98,6 +100,32 @@ NSString *const ATLMConfigurationIdentityProviderURLKey = @"identity_provider_ur
     _identityProviderURL = [NSURL URLWithString:identityProviderURLString];
     if (!_identityProviderURL) {
         [NSException raise:NSInternalInconsistencyException format:@"Failed to initialize `%@` because `identity_provider_url` key value in the input file was not a valid URL. identityProviderURL='%@'", self.class, identityProviderURLString];
+    }
+    
+    // Extract the Larry userID.
+    NSString *larryUserIDString = configuration[ATLMConfigurationLarryUserIDKey];
+    if (!larryUserIDString) {
+        [NSException raise:NSInternalInconsistencyException format:@"Failed to initialize `%@` because `larry_user_id` key in the input file was not set.", self.class];
+    }
+    if ((id)larryUserIDString == [NSNull null]) {
+        [NSException raise:NSInternalInconsistencyException format:@"Failed to initialize `%@` because `larry_user_id` key value in the input file was `null`.", self.class];
+    }
+    _larryUserID = [NSURL URLWithString:larryUserIDString];
+    if (!_larryUserID) {
+        [NSException raise:NSInternalInconsistencyException format:@"Failed to initialize `%@` because `larry_user_id` key value in the input file was not a valid URL. larryUserID='%@'", self.class, larryUserIDString];
+    }
+    
+    // Extract the ApiAI token.
+    NSString *apiAITokenString = configuration[ATLMConfigurationApiAITokenKey];
+    if (!apiAITokenString) {
+        [NSException raise:NSInternalInconsistencyException format:@"Failed to initialize `%@` because `api_ai_token` key in the input file was not set.", self.class];
+    }
+    if ((id)apiAITokenString == [NSNull null]) {
+        [NSException raise:NSInternalInconsistencyException format:@"Failed to initialize `%@` because `api_ai_token` key value in the input file was `null`.", self.class];
+    }
+    _apiAIToken = apiAITokenString;
+    if (!_apiAIToken) {
+        [NSException raise:NSInternalInconsistencyException format:@"Failed to initialize `%@` because `api_ai_token` key value in the input file was not a valid URL. apiAIToken='%@'", self.class, apiAITokenString];
     }
     
     return self;

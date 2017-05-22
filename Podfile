@@ -4,10 +4,10 @@ source 'https://github.com/CocoaPods/Specs.git'
 use_frameworks!
 target 'Atlas Messenger' do
 
-  if ENV['LAYER_USE_UI_SDK_SUBMODULE'].blank? then
-    pod 'Atlas'
+  if ENV['LAYER_USE_UI_SDK_LOCATION'].blank? then
+    pod 'Atlas', git: 'https://github.com/layerhq/Atlas-iOS', branch: 'larry-integration'
   else
-    pod 'Atlas', path: 'Libraries/Atlas'
+    pod 'Atlas', path: ENV['LAYER_USE_UI_SDK_LOCATION']
   end
   
   if !ENV['LAYER_USE_CORE_SDK_LOCATION'].blank? then
@@ -15,6 +15,7 @@ target 'Atlas Messenger' do
     pod 'LayerKit', path: ENV['LAYER_USE_CORE_SDK_LOCATION']
   end
   
+  pod 'ApiAI'
   pod 'SVProgressHUD'
   pod 'ClusterPrePermissions', '~> 0.1'
   

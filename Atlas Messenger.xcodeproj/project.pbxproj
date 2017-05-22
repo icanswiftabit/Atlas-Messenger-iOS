@@ -56,6 +56,7 @@
 		4091211A1E45127200CB0BBE /* TestLayerConfiguration.json in Resources */ = {isa = PBXBuildFile; fileRef = 409121191E45127200CB0BBE /* TestLayerConfiguration.json */; };
 		94659349D388E71A781C94F1 /* Pods_Atlas_MessengerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43BF955CF4F1A14162C00D1E /* Pods_Atlas_MessengerTests.framework */; };
 		AA1DC2791E3C05060034CFD5 /* ATLMLocationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA1DC2781E3C05060034CFD5 /* ATLMLocationViewController.m */; };
+		AA26E0FF1ECA73840004E826 /* ATLMLarryController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA26E0FE1ECA73840004E826 /* ATLMLarryController.m */; };
 		AA441A931DD4D94D00F93295 /* ATLMUserCredentials.m in Sources */ = {isa = PBXBuildFile; fileRef = AA441A921DD4D94D00F93295 /* ATLMUserCredentials.m */; };
 		D016D0FC1D20D9D900D9AA4F /* ATLMApplicationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D016D0FB1D20D9D900D9AA4F /* ATLMApplicationViewController.m */; };
 		D0C483D81E553F8D00DB02CF /* TestLayerConfiguration-invalid.json in Resources */ = {isa = PBXBuildFile; fileRef = D0C483D61E553E5300DB02CF /* TestLayerConfiguration-invalid.json */; };
@@ -89,6 +90,19 @@
 			remoteInfo = LayerSample;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		AAC0EB471ECA314F00EB1A08 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		0A0C242319477D8F00401B74 /* Atlas Messenger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Atlas Messenger.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -170,6 +184,8 @@
 		9F6E0263378540FD98CB9AC6 /* Pods-Atlas MessengerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Atlas MessengerTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Atlas MessengerTests/Pods-Atlas MessengerTests.debug.xcconfig"; sourceTree = "<group>"; };
 		AA1DC2771E3C05060034CFD5 /* ATLMLocationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMLocationViewController.h; sourceTree = "<group>"; };
 		AA1DC2781E3C05060034CFD5 /* ATLMLocationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMLocationViewController.m; sourceTree = "<group>"; };
+		AA26E0FD1ECA73840004E826 /* ATLMLarryController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMLarryController.h; sourceTree = "<group>"; };
+		AA26E0FE1ECA73840004E826 /* ATLMLarryController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMLarryController.m; sourceTree = "<group>"; };
 		AA441A921DD4D94D00F93295 /* ATLMUserCredentials.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMUserCredentials.m; sourceTree = "<group>"; };
 		AA441A941DD4D96900F93295 /* ATLMUserCredentials.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ATLMUserCredentials.h; sourceTree = "<group>"; };
 		B53937831A24F6AF00DE60F9 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
@@ -315,6 +331,8 @@
 				251D8D8E1A9688C40000BFA2 /* ATLMConversationListViewController.m */,
 				251D8D8F1A9688C40000BFA2 /* ATLMConversationViewController.h */,
 				251D8D901A9688C40000BFA2 /* ATLMConversationViewController.m */,
+				AA26E0FD1ECA73840004E826 /* ATLMLarryController.h */,
+				AA26E0FE1ECA73840004E826 /* ATLMLarryController.m */,
 				251D8D891A9688C40000BFA2 /* ATLMLayerController.h */,
 				251D8D8A1A9688C40000BFA2 /* ATLMLayerController.m */,
 				AA1DC2771E3C05060034CFD5 /* ATLMLocationViewController.h */,
@@ -525,6 +543,7 @@
 				0A0C242119477D8F00401B74 /* Resources */,
 				794893A33FCDDB1C7369F738 /* [CP] Embed Pods Frameworks */,
 				04CB55D11C09A3C30D75245E /* [CP] Copy Pods Resources */,
+				AAC0EB471ECA314F00EB1A08 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -567,9 +586,10 @@
 				ORGANIZATIONNAME = "Layer, Inc.";
 				TargetAttributes = {
 					0A0C242219477D8F00401B74 = {
+						DevelopmentTeam = U46UP347QQ;
 						DevelopmentTeamName = "Layer, Inc.";
 						LastSwiftMigration = 0820;
-						ProvisioningStyle = Manual;
+						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -765,6 +785,7 @@
 				251D8DC81A9688C50000BFA2 /* ATLMParticipantTableViewController.m in Sources */,
 				251D8DC41A9688C50000BFA2 /* ATLMConversationListViewController.m in Sources */,
 				251D8DD81A9688C50000BFA2 /* ATLMSettingsHeaderView.m in Sources */,
+				AA26E0FF1ECA73840004E826 /* ATLMLarryController.m in Sources */,
 				408588481E3C097700C7831C /* main.m in Sources */,
 				251D8DD41A9688C50000BFA2 /* ATLMUtilities.m in Sources */,
 				AA441A931DD4D94D00F93295 /* ATLMUserCredentials.m in Sources */,
@@ -901,7 +922,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Atlas Messenger.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = U46UP347QQ;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SRCROOT)/Libraries",
 					"$(inherited)",
@@ -914,6 +935,7 @@
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/Resources/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/**",
@@ -938,7 +960,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Atlas Messenger.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = U46UP347QQ;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SRCROOT)/Libraries",
 					"$(inherited)",
@@ -951,6 +973,7 @@
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/Resources/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/**",

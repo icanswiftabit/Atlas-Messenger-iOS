@@ -18,6 +18,7 @@
 //  limitations under the License.
 //
 
+#import "ATLMLarryController.h"
 #import "ATLMLayerController.h"
 #import "ATLConversationViewController.h"
 
@@ -36,6 +37,8 @@ NS_ASSUME_NONNULL_BEGIN
  @abstract The controller object for the application.
  */
 @property (nonnull, nonatomic) ATLMLayerController *layerController;
+
+@property (nonnull, nonatomic) ATLMLarryController *larryController;
 
 @end
 NS_ASSUME_NONNULL_END

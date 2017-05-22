@@ -148,6 +148,7 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
     self = [self initWithLayerClient:layerController.layerClient];
     if (self)  {
         _layerController = layerController;
+        _larryController = [[ATLMLarryController alloc] initWithLayerClient:layerController.layerClient];
     }
     return self;
 }
@@ -400,6 +401,29 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
     return [[NSAttributedString alloc] initWithString:statusString attributes:@{NSFontAttributeName : [UIFont boldSystemFontOfSize:11]}];
 }
 
+#pragma mark - Larry Helper Methods
+
+
+- (BOOL)isLarryConversation
+{
+    return [self.conversation.participants containsObject:self.larryController.larryIdentity];
+}
+
+- (NSString *)getLarryResponse:(NSString *)messageText
+{
+    NSAssert([self isLarryConversation], @"Cannot get a Larry response from outside the Larry conversation.");
+    NSString *responseText;
+    
+    
+    return responseText;
+}
+
+- (void)sendLarryMessage:(NSString *)messageText
+{
+    NSAssert([self isLarryConversation], @"Cannot send a message as Larry from outside the Larry conversation.");
+    
+}
+
 #pragma mark - ATLAddressBarControllerDelegate
 
 /**
@@ -529,6 +553,29 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
 
 #pragma mark - Notification Handlers
 
+- (void)layerClientObjectsDidChange:(NSNotification *)notification
+{
+    if (!self.conversation) return;
+    if (![self isLarryConversation]) return;
+    
+    NSArray *changes = notification.userInfo[LYRClientObjectChangesUserInfoKey];
+    for (LYRObjectChange *change in changes) {
+        if (change.type == LYRObjectChangeTypeCreate && [change.object isKindOfClass:[LYRMessage class]]) {
+            LYRMessage *message = change.object;
+            if (message.sender == self.layerController.layerClient.authenticatedUser) {
+                NSString *messageText = [self getTextFromMessage:message];
+                if (messageText) {
+                    [self.larryController getResponseFromLarry:messageText completion:^(NSString * _Nonnull responseText, NSError * _Nonnull error) {
+                        if (responseText) {
+                            [self.larryController sendMessageAsLarry:responseText];
+                        }
+                    }];
+                }
+            }
+        }
+    }
+}
+
 - (void)conversationMetadataDidChange:(NSNotification *)notification
 {
     if (!self.conversation) return;
@@ -588,6 +635,13 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
     return @"Message";
 }
 
+- (NSString *)getTextFromMessage:(LYRMessage *)message
+{
+    NSString *messageText;
+    
+    return messageText;
+}
+
 #pragma mark - Link Tap Handler
 
 - (void)userDidTapLink:(NSNotification *)notification
@@ -611,6 +665,7 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDidTapLink:) name:ATLUserDidTapLinkNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(conversationMetadataDidChange:) name:ATLMConversationMetadataDidChangeNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationDidChange:) name:UIDeviceOrientationDidChangeNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(layerClientObjectsDidChange:) name:LYRClientObjectsDidChangeNotification object:nil];
 }
 
 #pragma mark - Device Orientation

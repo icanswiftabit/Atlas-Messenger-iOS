@@ -1,1 +1,9 @@
-[{"name":null,"app_id":null,"identity_provider_url":null}]
+ [
+  {
+  "name": "Larry Messenger",
+  "app_id": "layer:///apps/staging/0a08dd1a-39c4-11e7-ae91-ebde36653c9c",
+  "identity_provider_url": "https://larry-messenger.herokuapp.com/authenticate",
+  "larry_user_id": "larry-bot",
+  "api_ai_token": "0bd4b167b4cf4a8f88a2e33951562ad9"
+  }
+  ]

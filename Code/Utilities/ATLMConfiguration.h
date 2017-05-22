@@ -59,6 +59,10 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, readonly) NSURL *identityProviderURL;
 
+@property (nonatomic, readonly) NSURL *larryUserID;
+
+@property (nonatomic, readonly) NSString *apiAIToken;
+
 /**
  @abstract Initializes an `ATLMConfiguration` instance and loads the values
    from the input JSON file (`fileURL`) into the instance properties.

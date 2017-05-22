@@ -61,7 +61,7 @@ NSString *const ATLMComposeButtonAccessibilityLabel = @"Compose Button";
     self.delegate = self;
     self.dataSource = self;
     self.allowsEditing = YES;
-    self.displaysAvatarItem = YES;
+    self.displaysAvatarItem = NO;
     
     // Left navigation item
     UIButton* infoButton= [UIButton buttonWithType:UIButtonTypeInfoLight];
