@@ -1,5 +1,10 @@
 # Atlas Messenger Changelog
 
+## 1.1.1
+
+### Enhancements
+* LayerKit with Telemetry is now included in Atlas Messenger.
+
 ## 1.1.0
 
 ### Enhancements
