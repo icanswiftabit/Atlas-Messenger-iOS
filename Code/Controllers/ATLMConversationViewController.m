@@ -32,6 +32,11 @@
 #import "ATLMCardResponder.h"
 #import "ATLMCardResponse.h"
 #import "ATLMCardResponseCollectionViewCell.h"
+#import "Larry_Messenger-Swift.h"
+#import "VTConferenceCollectionViewCell.h"
+
+NSString *const VTMIMETypeConference = @"vt/conference";
+NSString *const VTConferenceCollectionViewCellIdentifier = @"VTConferenceCollectionViewCell";
 
 static NSDateFormatter *ATLMShortTimeFormatter()
 {
@@ -196,6 +201,7 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
     [self registerClass:clss forMessageCellWithReuseIdentifier:NSStringFromClass(clss)];
     
     [self configureUserInterfaceAttributes];
+    [self configureVoxeet];
     [self registerNotificationObservers];
 }
 
@@ -216,6 +222,15 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+#pragma mark - Configuration methods
+
+- (void)configureVoxeet
+{
+    [self.collectionView registerNib:[UINib nibWithNibName:VTConferenceCollectionViewCellIdentifier bundle:nil] forCellWithReuseIdentifier:VTConferenceCollectionViewCellIdentifier];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(conferenceActionButtonTapped:) name:@"ConferenceActionButtonTapped" object:nil];
 }
 
 #pragma mark - Accessors
@@ -307,6 +322,11 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
         }
     }
     
+    if (identifier == nil) {
+        if ([message.parts.firstObject.MIMEType isEqualToString:VTMIMETypeConference]) {
+            result = 193.0;
+        }
+    }
     return result;
 }
 
@@ -318,13 +338,58 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
         
         BOOL isOutgoing = [self.layerClient.authenticatedUser.userID isEqualToString:message.sender.userID];
         [abcvc configureCellForType:(isOutgoing ? ATLOutgoingCellType : ATLIncomingCellType)];
+        
+        UIMenuItem *copyMenuItem = [[UIMenuItem alloc] initWithTitle:@"Copy" action:@selector(copyMessage:)];
+        UIMenuItem *deleteMenuItem = [[UIMenuItem alloc] initWithTitle:@"Delete" action:@selector(deleteMessage:)];
+        abcvc.bubbleView.menuControllerActions = [NSArray arrayWithObjects:copyMenuItem, deleteMenuItem, nil];
     }
     
-    if ([cell conformsToProtocol:@protocol(ATLMCardResponder)] && [cell respondsToSelector:@selector(setLayerController:)]) {
+    if ([cell isKindOfClass:[VTConferenceCollectionViewCell class]]) {
+        [self configureVoxeetConferenceCell:(VTConferenceCollectionViewCell *)cell forMessage:message];
+    } else if ([cell conformsToProtocol:@protocol(ATLMCardResponder)] && [cell respondsToSelector:@selector(setLayerController:)]) {
         [(id<ATLMCardResponder>)cell setLayerController:[self layerController]];
-    }
-    else if ([cell isKindOfClass:[ATLMCardResponseCollectionViewCell class]]) {
+    } else if ([cell isKindOfClass:[ATLMCardResponseCollectionViewCell class]]) {
         [(ATLMCardResponseCollectionViewCell*)cell setLayerController:[self layerController]];
+    }
+}
+
+- (void)configureVoxeetConferenceCell:(VTConferenceCollectionViewCell *)cell forMessage:(LYRMessage *)message
+{
+    NSString *conferenceID = [self conferenceIDWithMessage:message];
+    if (conferenceID) {
+        cell.conferenceId = conferenceID;
+        
+        [VoxeetManager statusWithConferenceID:conferenceID success:^(id _Nonnull json) {
+            if (json != nil) {
+                NSDictionary *statusData = [self conferenceStatusDataFromRawData:json];
+                NSNumber *isLive = [statusData objectForKey:@"isLive"];
+                
+                if (isLive.boolValue == true) {
+                    [self refreshVoxeetCell:cell forConferenceData:statusData];
+                } else {
+                    [VoxeetManager historyWithConferenceID:conferenceID success:^(id _Nonnull json) {
+                        if (json != nil) {
+                            NSDictionary *historyData = [self conferenceHistoryDataFromRawData:json[0]];
+                            
+                            [self refreshVoxeetCell:cell forConferenceData:historyData];
+                        }
+                    }];
+                }
+            }
+        }];
+    }
+}
+
+- (void)refreshVoxeetCell:(VTConferenceCollectionViewCell *)voxeetCell forConferenceData:(NSDictionary *)conferenceData
+{
+    [voxeetCell loadConferenceData:conferenceData];
+    
+    NSNumber *isLive = [conferenceData objectForKey:@"isLive"];
+    if (isLive.boolValue == 1) {
+        voxeetCell.bubbleView.menuControllerActions = nil;
+    } else {
+        UIMenuItem *deleteMenuItem = [[UIMenuItem alloc] initWithTitle:@"Delete" action:@selector(deleteMessage:)];
+        voxeetCell.bubbleView.menuControllerActions = [NSArray arrayWithObjects:deleteMenuItem, nil];
     }
 }
 
@@ -358,6 +423,18 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
     } else {
         UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:viewController];
         [sender presentViewController:navigationController animated:true completion:nil];
+    }
+}
+
+- (void)conversationViewController:(ATLConversationViewController *)viewController didSelectActionSheetCardType:(enum ATLMActionSheetCardType)cardType
+{
+    switch (cardType) {
+        case ATLMActionSheetCardTypeVoxeet:
+            [self sendVoxeetCard];
+            break;
+            
+        default:
+            break;
     }
 }
 
@@ -477,48 +554,6 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
     return [[NSAttributedString alloc] initWithString:statusString attributes:@{NSFontAttributeName : [UIFont boldSystemFontOfSize:11]}];
 }
 
-#pragma mark - Larry Helper Methods
-
-
-- (BOOL)isLarryConversation
-{
-    return [self.conversation.participants containsObject:self.larryController.larryIdentity];
-}
-
-- (NSString *)getLarryResponse:(NSString *)messageText
-{
-    NSAssert([self isLarryConversation], @"Cannot get a Larry response from outside the Larry conversation.");
-    NSString *responseText;
-    
-    
-    return responseText;
-}
-
-- (void)sendLarryMessage:(NSString *)messageText
-{
-    NSAssert([self isLarryConversation], @"Cannot send a message as Larry from outside the Larry conversation.");
-}
-
-- (nullable NSString *)conversationViewController:(ATLConversationViewController *)viewController reuseIdentifierForMessage:(LYRMessage *)message
-{
-    NSString *result = [self cardCellFactoryReuseIdentifierForMesssage:message];
-    
-    if (nil == result) {
-        
-        NSArray<LYRMessagePart *> *parts = [message parts];
-        
-        NSUInteger count = [parts count];
-        LYRMessagePart *initial = [parts firstObject];
-        parts = ((1 == count) ? nil : [parts subarrayWithRange:NSMakeRange(1, count - 1)]);
-        ATLMCardResponse *response = [ATLMCardResponse cardResponseWithMessagePart:initial supplementalParts:parts];
-        if (nil != response) {
-            result = NSStringFromClass([ATLMCardResponseCollectionViewCell class]);
-        }
-    }
-    
-    return result;
-}
-
 #pragma mark - ATLAddressBarControllerDelegate
 
 /**
@@ -578,7 +613,7 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
 - (void)participantTableViewController:(ATLParticipantTableViewController *)participantTableViewController didSelectParticipant:(id<ATLParticipant>)participant
 {
     [self.addressBarController selectParticipant:participant];
-    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 /**
@@ -623,6 +658,191 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
 {
     self.conversation = conversation;
     [self configureTitle];
+}
+
+#pragma mark - Larry Helper Methods
+
+- (BOOL)isLarryConversation
+{
+    return [self.conversation.participants containsObject:self.larryController.larryIdentity];
+}
+
+- (NSString *)getLarryResponse:(NSString *)messageText
+{
+    NSAssert([self isLarryConversation], @"Cannot get a Larry response from outside the Larry conversation.");
+    NSString *responseText;
+    
+    
+    return responseText;
+}
+
+- (void)sendLarryMessage:(NSString *)messageText
+{
+    NSAssert([self isLarryConversation], @"Cannot send a message as Larry from outside the Larry conversation.");
+}
+
+#pragma mark - VoxeetConferenceKit Helpers
+
+- (void)sendVoxeetCard
+{
+    [VoxeetManager createWithCompletion:^(NSString * _Nullable conferenceID) {
+        if (conferenceID) {
+            NSDictionary *confIdDict = [NSDictionary dictionaryWithObject:conferenceID forKey:@"confId"];
+            NSData *messageData = [NSKeyedArchiver archivedDataWithRootObject:confIdDict];
+            LYRMessagePart *messagePart = [LYRMessagePart messagePartWithMIMEType:VTMIMETypeConference data:messageData];
+            
+            LYRPushNotificationConfiguration *defaultConfiguration = [LYRPushNotificationConfiguration new];
+            defaultConfiguration.alert = @"You have a call";
+            defaultConfiguration.sound = @"layerbell.caf";
+            defaultConfiguration.category = ATLUserNotificationDefaultActionsCategoryIdentifier;
+            
+            LYRMessageOptions *messageOptions = [LYRMessageOptions new];
+            messageOptions.pushNotificationConfiguration = defaultConfiguration;
+            
+            LYRMessage *messageLayer = [self.layerClient newMessageWithParts:@[ messagePart ] options:messageOptions error:nil];
+            
+            NSError *error = nil;
+            BOOL success = [self.conversation sendMessage:messageLayer error:&error];
+            if (success) {
+                NSLog(@"Message enqueued for delivery");
+            } else {
+                NSLog(@"Message send failed with error: %@", error);
+            }
+        }
+    }];
+}
+
+- (void)startVoxeetConference:(NSString *)conferenceID
+{
+    if ([self isLarryConversation]) return;
+    
+    [VoxeetManager startConferenceWithConferenceID:conferenceID participants:self.conversation.participants];
+}
+
+- (void)conferenceActionButtonTapped:(NSNotification *)notification
+{
+    NSString *conferenceID = notification.userInfo[@"conferenceId"];
+    NSString *actionText = notification.userInfo[@"actionText"];
+    if (conferenceID && actionText) {
+        if ([actionText isEqualToString:@"Join Call"]) {
+            [self startVoxeetConference:conferenceID];
+        } else if ([actionText isEqualToString:@"New Call"]) {
+            [self sendVoxeetCard];
+        }
+    }
+}
+
+- (NSString *)conferenceIDWithMessage:(LYRMessage *)message
+{
+    NSString *conferenceID;
+    if ([message.parts.firstObject.MIMEType isEqualToString:VTMIMETypeConference]) {
+        NSData *messageData = message.parts.firstObject.data;
+        if (messageData) {
+            NSDictionary *messageDictionary = [NSKeyedUnarchiver unarchiveObjectWithData:messageData];
+            if (messageDictionary.allKeys.count > 0) {
+                conferenceID = [messageDictionary objectForKey:@"confId"];
+            }
+        }
+    }
+    
+    return conferenceID;
+}
+
+- (NSDictionary *)conferenceStatusDataFromRawData:(NSDictionary *)rawData {
+    NSMutableDictionary *conferenceData = [[NSMutableDictionary alloc]init];
+    
+    NSString *conferenceId = rawData[@"conferenceId"];
+    [conferenceData setValue:conferenceId forKey:@"confId"];
+    
+    // Status message extraction
+    NSNumber *isLive = [rawData objectForKey:@"isLive"];
+    [conferenceData setValue:isLive forKey:@"isLive"];
+    
+    
+    if (isLive != nil && [isLive intValue] == 1) {
+        NSMutableArray *participantsArray = [[NSMutableArray alloc] init];
+        [conferenceData setObject:participantsArray forKey:@"participants"];
+        
+        // Creation of 2 buffers dictionary for VoxeetId and currentStatus
+        NSMutableDictionary *userStateBuffer = [[NSMutableDictionary alloc] init];
+        NSMutableDictionary *userIdsBuffer = [[NSMutableDictionary alloc] init];
+        NSArray *participants = [rawData objectForKey:@"participants"];
+        if (participants != nil && participants.count > 0) {
+            for (NSDictionary *part in participants) {
+                NSString *userId = nil;
+                NSDictionary *metaData = part[@"metadata"];
+                if (metaData != nil) {
+                    userId = [metaData objectForKey:@"AtlasId"];
+                }
+                NSString *voxeetId = part[@"userId"];
+                if (userId != nil && voxeetId != nil) {
+                    [userIdsBuffer setObject:voxeetId forKey:userId];
+                }
+                
+                NSString *status = part[@"status"];
+                
+                if (userId != nil && status != nil) {
+                    [userStateBuffer setObject:status forKey:userId];
+                }
+            }
+        }
+        
+        // Creating a dictionary for each conference participant with buffered data
+        for (LYRIdentity *lyrPart in self.conversation.participants) {
+            NSString *status = userStateBuffer[lyrPart.userID];
+            
+            if (status == nil) {
+                status = @"OUT";
+            }
+            
+            NSString *voxeetId = userIdsBuffer[lyrPart.userID];
+            
+            NSMutableDictionary *userDict = [[NSMutableDictionary alloc] init];
+            [userDict setObject:lyrPart.userID forKey:@"id"];
+            
+            userDict[@"name"] = lyrPart.displayName;
+            userDict[@"status"] = status;
+            userDict[@"lyrUser"] = lyrPart;
+            userDict[@"voxeetId"] = voxeetId;
+            [participantsArray addObject:userDict];
+            
+            if ([lyrPart.userID isEqualToString:self.layerClient.authenticatedUser.userID]) {
+                conferenceData[@"ownStatus"] = status;
+            }
+        }
+        
+        // Starting timestamp management
+        NSNumber *startTimestamp = rawData[@"startTimestamp"];
+        if (startTimestamp != nil) {
+            NSNumber *secondsStart = [NSNumber numberWithDouble:[startTimestamp doubleValue] / 1000.0];
+            [conferenceData setObject:secondsStart forKey:@"startTime"];
+        }
+    }
+    return conferenceData;
+}
+
+- (NSDictionary *)conferenceHistoryDataFromRawData:(NSDictionary *)rawData
+{
+    NSMutableDictionary *conferenceData = [[NSMutableDictionary alloc]init];
+    
+    NSString *conferenceId = rawData[@"conferenceId"];
+    [conferenceData setObject:conferenceId forKey:@"conferenceId"];
+    
+    NSNumber *startTime = rawData[@"conferenceTimestamp"];
+    [conferenceData setObject:startTime forKey:@"startTime"];
+    
+    NSNumber *duration = rawData[@"conferenceDuration"];
+    [conferenceData setObject:duration forKey:@"duration"];
+    
+    NSArray *participants = rawData[@"@participantIds"];
+    if (participants != nil) {
+        [conferenceData setObject:participants forKey:@"participants"];
+    }
+    
+    NSNumber *isLive = [NSNumber numberWithInteger:0];
+    [conferenceData setObject:isLive forKey:@"isLive"];
+    
+    return conferenceData;
 }
 
 #pragma mark - Details Button Actions
@@ -736,6 +956,32 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
     
     return messageText;
 }
+
+- (nullable NSString *)conversationViewController:(ATLConversationViewController *)viewController reuseIdentifierForMessage:(LYRMessage *)message
+{
+    NSString *result = [self cardCellFactoryReuseIdentifierForMesssage:message];
+    
+    if (nil == result) {
+        
+        NSArray<LYRMessagePart *> *parts = [message parts];
+        
+        NSUInteger count = [parts count];
+        LYRMessagePart *initial = [parts firstObject];
+        parts = ((1 == count) ? nil : [parts subarrayWithRange:NSMakeRange(1, count - 1)]);
+        ATLMCardResponse *response = [ATLMCardResponse cardResponseWithMessagePart:initial supplementalParts:parts];
+        if (nil != response) {
+            result = NSStringFromClass([ATLMCardResponseCollectionViewCell class]);
+        }
+    }
+    
+    if (result == nil) {
+        if ([message.parts.firstObject.MIMEType isEqualToString:VTMIMETypeConference]) {
+            result = VTConferenceCollectionViewCellIdentifier;
+        }
+    }
+    
+    return result;
+}
     
 - (nullable NSString *)cardCellFactoryReuseIdentifierForMesssage:(LYRMessage *)message
 {
@@ -781,6 +1027,78 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
 - (void)deviceOrientationDidChange:(NSNotification *)notification
 {
     [self.collectionView.collectionViewLayout invalidateLayout];
+}
+
+#pragma mark - Message ActionItem Methods
+
+- (void)deleteMessage:(id)sender
+{
+    if (![[sender class] isSubclassOfClass:[UIMenuController class]]) {
+        return;
+    }
+    
+    CGPoint point = [(UIMenuController *)sender menuFrame].origin;
+    CGPoint offsetPoint = self.collectionView.contentOffset;
+    CGPoint realPoint = CGPointMake(point.x + offsetPoint.x, point.y + offsetPoint.y + 64);
+    NSIndexPath *path = [self.collectionView indexPathForItemAtPoint:realPoint];
+    if (!path) {
+        return;
+    }
+    
+    __block ATLMessageCollectionViewCell *cell = (ATLMessageCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:path];
+    UIAlertController *controller = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+    UIAlertAction *globalAction = [UIAlertAction actionWithTitle:@"Everyone" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+        [self deleteMessage:cell.message withMode:LYRDeletionModeAllParticipants];
+    }];
+    [controller addAction:globalAction];
+    
+    UIAlertAction *myDevicesAction = [UIAlertAction actionWithTitle:@"My Devices" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+        [self deleteMessage:cell.message withMode:LYRDeletionModeMyDevices];
+    }];
+    [controller addAction:myDevicesAction];
+    
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil];
+    [controller addAction:cancelAction];
+    [self presentViewController:controller animated:YES completion:nil];
+}
+
+- (void)deleteMessage:(LYRMessage *)message withMode:(LYRDeletionMode)deletionMode
+{
+    NSError *error;
+    BOOL success = [message delete:deletionMode error:&error];
+    if (!success) {
+        ATLMAlertWithError(error);
+    } else {
+        NSLog(@"Message deleted!");
+    }
+}
+
+- (void)copyMessage:(id)sender
+{
+    if (![[sender class] isSubclassOfClass:[UIMenuController class]]) {
+        return;
+    }
+    
+    CGPoint point = [(UIMenuController *)sender menuFrame].origin;
+    CGPoint offsetPoint = self.collectionView.contentOffset;
+    CGPoint realPoint = CGPointMake(point.x + offsetPoint.x, point.y + offsetPoint.y + 64);
+    NSIndexPath *path = [self.collectionView indexPathForItemAtPoint:realPoint];
+    if (!path) {
+        return;
+    }
+    
+    ATLMessageCollectionViewCell *cell = (ATLMessageCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:path];
+    UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+    if (!cell.bubbleView.bubbleViewLabel.isHidden) {
+        NSString *text = cell.bubbleView.bubbleViewLabel.text;
+        if (!text) {
+            return;
+        }
+        pasteboard.string = text;
+    } else {
+        NSData *imageData = UIImagePNGRepresentation(cell.bubbleView.bubbleImageView.image);
+        [pasteboard setData:imageData forPasteboardType:ATLPasteboardImageKey];
+    }
 }
 
 @end

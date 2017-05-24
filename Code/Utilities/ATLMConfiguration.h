@@ -63,6 +63,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, readonly) NSString *apiAIToken;
 
+@property (nonatomic, readonly) NSString *voxeetConsumerToken;
+
+@property (nonatomic, readonly) NSString *voxeetConsumerSecret;
+
 /**
  @abstract Initializes an `ATLMConfiguration` instance and loads the values
    from the input JSON file (`fileURL`) into the instance properties.

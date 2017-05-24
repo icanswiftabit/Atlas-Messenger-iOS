@@ -18,8 +18,8 @@
 //  limitations under the License.
 //
 
-#import <LayerKit/LayerKit.h>
 #import <Atlas/Atlas.h>
+#import <LayerKit/LayerKit.h>
 #import <SVProgressHUD/SVProgressHUD.h>
 
 #import "ATLMAppDelegate.h"
@@ -31,7 +31,7 @@
 #import "ATLMAuthenticationProvider.h"
 #import "ATLMApplicationViewController.h"
 #import "ATLMConfiguration.h"
-
+#import "Larry_Messenger-Swift.h"
 
 @interface ATLMAppDelegate () <ATLMLayerControllerDelegate>
 
@@ -52,6 +52,7 @@
     self.applicationViewController = [ATLMApplicationViewController new];
     
     [self initializeLayer];
+    [self initializeVoxeet];
     
     // Push Notifications follow authentication state
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(registerForRemoteNotifications) name:LYRClientDidAuthenticateNotification object:nil];
@@ -85,6 +86,14 @@
     self.layerController.delegate = self;
     
     self.applicationViewController.layerController = self.layerController;
+}
+
+- (void)initializeVoxeet
+{
+    NSURL *fileURL = [[NSBundle mainBundle] URLForResource:@"LayerConfiguration.json" withExtension:nil];
+    ATLMConfiguration *configuration = [[ATLMConfiguration alloc] initWithFileURL:fileURL];
+    
+    [VoxeetManager initializeVoxeetConferenceKitWithConsumerKey:configuration.voxeetConsumerToken consumerSecret:configuration.voxeetConsumerSecret];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application

@@ -246,7 +246,8 @@ NSString *const ATLMComposeButtonAccessibilityLabel = @"Compose Button";
 
 - (void)settingsViewControllerDidFinish:(ATLMSettingsViewController *)settingsViewController
 {
-    [settingsViewController dismissViewControllerAnimated:YES completion:nil];
+    [self.navigationController popViewControllerAnimated:YES];
+//    [settingsViewController dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma mark - Notification Handlers

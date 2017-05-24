@@ -2,7 +2,7 @@ platform :ios, '8.0'
 source 'https://github.com/CocoaPods/Specs.git'
 
 use_frameworks!
-target 'Atlas Messenger' do
+target 'Larry Messenger' do
 
   if ENV['LAYER_USE_UI_SDK_LOCATION'].blank? then
     pod 'Atlas', git: 'https://github.com/layerhq/Atlas-iOS', branch: 'larry-integration'
@@ -16,10 +16,11 @@ target 'Atlas Messenger' do
   end
   
   pod 'ApiAI'
-  pod 'SVProgressHUD'
   pod 'ClusterPrePermissions', '~> 0.1'
+  pod 'SVProgressHUD'
+  pod 'Kingfisher'
   
-  target 'Atlas MessengerTests' do
+  target 'Larry MessengerTests' do
       inherit! :search_paths
       pod 'Expecta'
       pod 'OCMock'

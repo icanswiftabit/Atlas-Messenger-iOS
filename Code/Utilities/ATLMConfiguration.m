@@ -24,6 +24,8 @@ NSString *const ATLMConfigurationAppIDKey = @"app_id";
 NSString *const ATLMConfigurationIdentityProviderURLKey = @"identity_provider_url";
 NSString *const ATLMConfigurationLarryUserIDKey = @"larry_user_id";
 NSString *const ATLMConfigurationApiAITokenKey = @"api_ai_token";
+NSString *const ATLMConfigurationVoxeetConsumerTokenKey = @"voxeet_consumer_token";
+NSString *const ATLMConfigurationVoxeetConsumerSecretKey = @"voxeet_consumer_secret";
 
 @implementation ATLMConfiguration
 
@@ -125,7 +127,33 @@ NSString *const ATLMConfigurationApiAITokenKey = @"api_ai_token";
     }
     _apiAIToken = apiAITokenString;
     if (!_apiAIToken) {
-        [NSException raise:NSInternalInconsistencyException format:@"Failed to initialize `%@` because `api_ai_token` key value in the input file was not a valid URL. apiAIToken='%@'", self.class, apiAITokenString];
+        [NSException raise:NSInternalInconsistencyException format:@"Failed to initialize `%@` because `api_ai_token` key value in the input file was not a valid String. apiAIToken='%@'", self.class, apiAITokenString];
+    }
+    
+    // Extract the Voxeet consumer token.
+    NSString *voxeetConsumerTokenString = configuration[ATLMConfigurationVoxeetConsumerTokenKey];
+    if (!voxeetConsumerTokenString) {
+        [NSException raise:NSInternalInconsistencyException format:@"Failed to initialize `%@` because `voxeet_consumer_token` key in the input file was not set.", self.class];
+    }
+    if ((id)voxeetConsumerTokenString == [NSNull null]) {
+        [NSException raise:NSInternalInconsistencyException format:@"Failed to initialize `%@` because `voxeet_consumer_token` key value in the input file was `null`.", self.class];
+    }
+    _voxeetConsumerToken = voxeetConsumerTokenString;
+    if (!_voxeetConsumerToken) {
+        [NSException raise:NSInternalInconsistencyException format:@"Failed to initialize `%@` because `voxeet_consumer_token` key value in the input file was not a valid String. voxeetConsumerToken='%@'", self.class, voxeetConsumerTokenString];
+    }
+    
+    // Extract the Voxeet consumer secret.
+    NSString *voxeetConsumerSecretString = configuration[ATLMConfigurationVoxeetConsumerSecretKey];
+    if (!voxeetConsumerSecretString) {
+        [NSException raise:NSInternalInconsistencyException format:@"Failed to initialize `%@` because `voxeet_consumer_secret` key in the input file was not set.", self.class];
+    }
+    if ((id)voxeetConsumerSecretString == [NSNull null]) {
+        [NSException raise:NSInternalInconsistencyException format:@"Failed to initialize `%@` because `voxeet_consumer_secret` key value in the input file was `null`.", self.class];
+    }
+    _voxeetConsumerSecret = voxeetConsumerSecretString;
+    if (!_voxeetConsumerSecret) {
+        [NSException raise:NSInternalInconsistencyException format:@"Failed to initialize `%@` because `voxeet_consumer_secret` key value in the input file was not a valid String. voxeetConsumerSecret='%@'", self.class, voxeetConsumerSecretString];
     }
     
     return self;

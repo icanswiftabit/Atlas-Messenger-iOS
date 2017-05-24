@@ -33,7 +33,8 @@ PODS:
   - KIF/Core (3.5.2)
   - KIFViewControllerActions (1.0.2):
     - KIF (>= 2.0.0)
-  - LayerKit (0.26.3)
+  - Kingfisher (3.9.1)
+  - LayerKit (0.26.4)
   - LYRCountDownLatch (0.9.0)
   - OCMock (3.4)
   - SVProgressHUD (2.1.2)
@@ -44,7 +45,8 @@ DEPENDENCIES:
   - ClusterPrePermissions (~> 0.1)
   - Expecta
   - KIF
-  - KIFViewControllerActions (from `https://github.com/blakewatters/KIFViewControllerActions.git`)
+  - KIFViewControllerActions
+  - Kingfisher
   - LYRCountDownLatch
   - OCMock
   - SVProgressHUD
@@ -52,13 +54,6 @@ DEPENDENCIES:
 EXTERNAL SOURCES:
   Atlas:
     :path: "~/Development/Layer-Dev/Atlas-iOS-Larry"
-  KIFViewControllerActions:
-    :git: https://github.com/blakewatters/KIFViewControllerActions.git
-
-CHECKOUT OPTIONS:
-  KIFViewControllerActions:
-    :commit: f9bb47771e29adfa0873aff9bc3652587613608e
-    :git: https://github.com/blakewatters/KIFViewControllerActions.git
 
 SPEC CHECKSUMS:
   ApiAI: 25f763ddd88139dc5fe6794a905300244190d168
@@ -67,11 +62,12 @@ SPEC CHECKSUMS:
   Expecta: e1c022fcd33910b6be89c291d2775b3fe27a89fe
   KIF: f2a6025bb3f11692df675054a134d43a9ec2d7db
   KIFViewControllerActions: 923795dc4bd4ca5657841ce7455ce67447693861
-  LayerKit: 6244ff6b99a6e47562bb550247448ffbf7d15f88
+  Kingfisher: 6729a0baaa458245bfb8cd5a1296c71c10d6eb6c
+  LayerKit: 0be814788498698b82a9e46a692b66bb3ec0ca48
   LYRCountDownLatch: 72a444f729ca5a8c6157c0b58f335a44e6702b48
   OCMock: 35ae71d6a8fcc1b59434d561d1520b9dd4f15765
   SVProgressHUD: c404a55d78acbeb7ebb78b76d3faf986475a6994
 
-PODFILE CHECKSUM: 85c043e5f63d7f95af562c0fd5623364edb358fb
+PODFILE CHECKSUM: a52bd1659cc7deb520aef196560f94e7051ff510
 
 COCOAPODS: 1.1.1
