@@ -304,7 +304,7 @@ static NSString *const ATLMBlockIconName = @"AtlasResource.bundle/block";
         self.indexPathToRemove = nil;
     } else if (actionSheet.tag == ATLMActionSheetLeaveConversation) {
         if (buttonIndex == actionSheet.destructiveButtonIndex) {
-            self.conversation.participants.count > 2 ? [self leaveConversation] : [self deleteConversation];
+            [self leaveConversation];
         }
     }
 }
@@ -387,18 +387,6 @@ static NSString *const ATLMBlockIconName = @"AtlasResource.bundle/block";
 {
     NSError *error;
     BOOL success = [self.conversation leave:&error];
-    if (!success) {
-        ATLMAlertWithError(error);
-        return;
-    } else {
-        [self.navigationController popToRootViewControllerAnimated:YES];
-    }
-}
-
-- (void)deleteConversation
-{
-    NSError *error;
-    BOOL success = [self.conversation delete:LYRDeletionModeAllParticipants error:&error];
     if (!success) {
         ATLMAlertWithError(error);
         return;

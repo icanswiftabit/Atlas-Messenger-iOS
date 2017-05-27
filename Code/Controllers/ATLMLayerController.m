@@ -24,6 +24,7 @@
 #import "ATLMConstants.h"
 #import "ATLMessagingUtilities.h"
 #import "ATLMUserCredentials.h"
+#import "Larry_Messenger-Swift.h"
 
 NSString *const ATLMConversationMetadataDidChangeNotification = @"LSConversationMetadataDidChangeNotification";
 NSString *const ATLMConversationParticipantsDidChangeNotification = @"LSConversationParticipantsDidChangeNotification";
@@ -149,6 +150,7 @@ NSString *const ATLMLayerControllerErrorDomain = @"ATLMLayerControllerErrorDomai
 - (void)layerClient:(LYRClient *)client didAuthenticateAsUserID:(NSString *)userID
 {
     NSLog(@"Layer Client did authenticate as userID=%@", userID);
+    [VoxeetManager openSessionWithIdentity:self.layerClient.authenticatedUser];
 }
 
 - (void)layerClientDidDeauthenticate:(LYRClient *)client

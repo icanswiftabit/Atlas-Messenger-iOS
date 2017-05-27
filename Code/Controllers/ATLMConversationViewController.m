@@ -231,6 +231,8 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
     [self.collectionView registerNib:[UINib nibWithNibName:VTConferenceCollectionViewCellIdentifier bundle:nil] forCellWithReuseIdentifier:VTConferenceCollectionViewCellIdentifier];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(conferenceActionButtonTapped:) name:@"ConferenceActionButtonTapped" object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(conferenceDestroyed:) name:@"ConferenceDestroyedPush" object:nil];
 }
 
 #pragma mark - Accessors
@@ -365,13 +367,13 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
                 NSNumber *isLive = [statusData objectForKey:@"isLive"];
                 
                 if (isLive.boolValue == true) {
-                    [self refreshVoxeetCell:cell forConferenceData:statusData];
+                    [self updateVoxeetCell:cell withConferenceData:statusData];
                 } else {
                     [VoxeetManager historyWithConferenceID:conferenceID success:^(id _Nonnull json) {
                         if (json != nil) {
                             NSDictionary *historyData = [self conferenceHistoryDataFromRawData:json[0]];
                             
-                            [self refreshVoxeetCell:cell forConferenceData:historyData];
+                            [self updateVoxeetCell:cell withConferenceData:historyData];
                         }
                     }];
                 }
@@ -380,7 +382,15 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
     }
 }
 
-- (void)refreshVoxeetCell:(VTConferenceCollectionViewCell *)voxeetCell forConferenceData:(NSDictionary *)conferenceData
+- (void)updateVoxeetCell:(VTConferenceCollectionViewCell *)voxeetCell isLive:(BOOL)isLive
+{
+    [VoxeetManager statusWithConferenceID:voxeetCell.conferenceId success:^(id _Nonnull rawData) {
+        NSDictionary *statusData = [self conferenceStatusDataFromRawData:rawData];
+        [voxeetCell loadConferenceData:statusData];
+    }];
+}
+
+- (void)updateVoxeetCell:(VTConferenceCollectionViewCell *)voxeetCell withConferenceData:(NSDictionary *)conferenceData
 {
     [voxeetCell loadConferenceData:conferenceData];
     
@@ -685,7 +695,7 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
 
 - (void)sendVoxeetCard
 {
-    [VoxeetManager createWithCompletion:^(NSString * _Nullable conferenceID) {
+    [VoxeetManager createConferenceWithCompletion:^(NSString * _Nullable conferenceID) {
         if (conferenceID) {
             NSDictionary *confIdDict = [NSDictionary dictionaryWithObject:conferenceID forKey:@"confId"];
             NSData *messageData = [NSKeyedArchiver archivedDataWithRootObject:confIdDict];
@@ -712,24 +722,52 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
     }];
 }
 
-- (void)startVoxeetConference:(NSString *)conferenceID
-{
-    if ([self isLarryConversation]) return;
-    
-    [VoxeetManager startConferenceWithConferenceID:conferenceID participants:self.conversation.participants];
-}
-
 - (void)conferenceActionButtonTapped:(NSNotification *)notification
 {
     NSString *conferenceID = notification.userInfo[@"conferenceId"];
     NSString *actionText = notification.userInfo[@"actionText"];
     if (conferenceID && actionText) {
         if ([actionText isEqualToString:@"Join Call"]) {
-            [self startVoxeetConference:conferenceID];
+            [self joinVoxeetConference:conferenceID];
+        } else if ([actionText isEqualToString:@"Leave Call"]) {
+            [self leaveVoxeetConference:conferenceID];
         } else if ([actionText isEqualToString:@"New Call"]) {
             [self sendVoxeetCard];
         }
     }
+}
+
+- (void)conferenceDestroyed:(NSNotification *)notification
+{
+    NSError *error;
+    NSData *data = notification.userInfo[@"JSON"];
+    NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+    NSString *conferenceID = json[@"conferenceId"];
+    if (conferenceID != nil) {
+        NSLog(@"Voxeet call ended for conferenceID = %@", conferenceID);
+        VTConferenceCollectionViewCell *cell = [self conferenceCellWithConferenceID:conferenceID];
+        [self updateVoxeetCell:cell isLive:NO];
+    }
+}
+
+- (void)joinVoxeetConference:(NSString *)conferenceID
+{
+    [VoxeetManager startConferenceWithConferenceID:conferenceID authenticatedUser:self.layerController.layerClient.authenticatedUser participants:self.conversation.participants success:^(id _Nonnull rawData) {
+        VTConferenceCollectionViewCell *cell = [self conferenceCellWithConferenceID:conferenceID];
+        NSDictionary *statusData = [self conferenceStatusDataFromRawData:rawData];
+        [self updateVoxeetCell:cell withConferenceData:statusData];
+    } fail:^(id _Nonnull error) {
+        NSLog(@"Failed to start Voxeet conferenceID %@ with error: %@", conferenceID, error);
+    }];
+    VTConferenceCollectionViewCell *cell = [self conferenceCellWithConferenceID:conferenceID];
+    [self updateVoxeetCell:cell isLive:YES];
+}
+
+- (void)leaveVoxeetConference:(NSString *)conferenceID
+{
+    [VoxeetManager stopConferenceWithConferenceID:conferenceID];
+    VTConferenceCollectionViewCell *cell = [self conferenceCellWithConferenceID:conferenceID];
+    [self updateVoxeetCell:cell isLive:NO];
 }
 
 - (NSString *)conferenceIDWithMessage:(LYRMessage *)message
@@ -746,6 +784,16 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
     }
     
     return conferenceID;
+}
+
+- (VTConferenceCollectionViewCell *)conferenceCellWithConferenceID:(NSString *)conferenceID
+{
+    for (UICollectionViewCell *cell in self.collectionView.visibleCells) {
+        if ([cell isKindOfClass:[VTConferenceCollectionViewCell class]] && [((VTConferenceCollectionViewCell *)cell).conferenceId isEqualToString:conferenceID]) {
+            return (VTConferenceCollectionViewCell *)cell;
+        }
+    }
+    return nil;
 }
 
 - (NSDictionary *)conferenceStatusDataFromRawData:(NSDictionary *)rawData {

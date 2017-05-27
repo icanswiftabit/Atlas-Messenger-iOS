@@ -65,13 +65,6 @@ extern NSString *const ATLMDebugModeSettingSwitch;
     [tester waitForViewWithAccessibilityLabel:@"Connected"];
 }
 
-- (void)testToVerifyDoneButtonFunctionality
-{
-    [tester tapViewWithAccessibilityLabel:@"Settings"];
-    [tester tapViewWithAccessibilityLabel:@"Done"];
-    [tester waitForViewWithAccessibilityLabel:ATLMConversationListTableViewAccessibilityLabel];
-}
-
 - (void)testToVerifySettingsDelegateFunctionalityOnDoneButtonTap
 {
     ATLMSettingsViewController *controller = [[ATLMSettingsViewController alloc] init];
