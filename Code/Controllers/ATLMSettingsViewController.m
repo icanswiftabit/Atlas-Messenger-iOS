@@ -129,13 +129,6 @@ NSString *const ATLMPresenceStatusKey = @"presenceStatus";
     [self.tableView registerClass:[ATLMStyleValue1TableViewCell class] forCellReuseIdentifier:ATLMDefaultCellIdentifier];
     [self.tableView registerClass:[ATLMCenterTextTableViewCell class] forCellReuseIdentifier:ATLMCenterTextCellIdentifier];
     
-    // Left navigation item
-    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
-                                                                                target:self
-                                                                                action:@selector(doneTapped:)];
-    doneButton.accessibilityLabel = @"Done";
-    self.navigationItem.rightBarButtonItem = doneButton;
-    
     self.headerView = [ATLMSettingsHeaderView headerViewWithUser:self.layerClient.authenticatedUser];
     self.headerView.frame = CGRectMake(0, 0, 320, 148);
     self.headerView.accessibilityLabel = ATLMSettingsHeaderAccessibilityLabel;
@@ -369,11 +362,6 @@ NSString *const ATLMPresenceStatusKey = @"presenceStatus";
     [alertController addAction:cancelAction];
 
     [self presentViewController:alertController animated:YES completion:nil];
-}
-
-- (void)doneTapped:(UIControl *)sender
-{
-    [self.settingsDelegate settingsViewControllerDidFinish:self];
 }
 
 - (void)logOut
