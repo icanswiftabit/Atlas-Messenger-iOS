@@ -17,6 +17,7 @@ target 'Atlas Messenger' do
   
   pod 'SVProgressHUD'
   pod 'ClusterPrePermissions', '~> 0.1'
+  pod 'LayerKitDiagnostics'
   
   target 'Atlas MessengerTests' do
       inherit! :search_paths
