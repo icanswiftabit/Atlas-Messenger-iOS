@@ -29,7 +29,7 @@ CGFloat const ATLMLogoLeftPadding = 4;
     if (self) {
         
         NSMutableAttributedString *atlasString = [[NSMutableAttributedString alloc] initWithString:@"ATLAS MESSENGER"];
-        [atlasString addAttribute:NSFontAttributeName value:ATLMUltraLightFont(26) range:NSMakeRange(0, atlasString.length)];
+        [atlasString addAttribute:NSFontAttributeName value:ATLMUltraLightFont(20) range:NSMakeRange(0, atlasString.length)];
         [atlasString addAttribute:NSForegroundColorAttributeName value:ATLBlueColor() range:NSMakeRange(0, atlasString.length)];
         [atlasString addAttribute:NSKernAttributeName value:@(12.0) range:NSMakeRange(0, atlasString.length)];
         
