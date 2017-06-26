@@ -27,4 +27,6 @@
 
 - (void)updateConnectedStateWithString:(NSString *)string;
 
+- (void)updateAuthenticatedStateWithString:(NSString *)string;
+
 @end

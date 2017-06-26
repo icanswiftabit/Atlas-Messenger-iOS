@@ -76,6 +76,9 @@ NSString *const ATLMConnected = @"Connected";
 NSString *const ATLMDisconnected = @"Disconnected";
 NSString *const ATLMLostConnection = @"Lost Connection";
 NSString *const ATLMConnecting = @"Connecting";
+NSString *const ATLMAuthenticated = @"Authenticated";
+NSString *const ATLMUnauthenticated = @"Unauthenticated";
+NSString *const ATLMChallenged = @"Challenged";
 
 NSString *const ATLMPresenceStatusKey = @"presenceStatus";
 
@@ -132,12 +135,21 @@ NSString *const ATLMPresenceStatusKey = @"presenceStatus";
     [self.tableView registerClass:[ATLMCenterTextTableViewCell class] forCellReuseIdentifier:ATLMCenterTextCellIdentifier];
     
     self.headerView = [ATLMSettingsHeaderView headerViewWithUser:self.layerClient.authenticatedUser];
-    self.headerView.frame = CGRectMake(0, 0, 320, 148);
+    self.headerView.frame = CGRectMake(0, 0, 320, 156);
     self.headerView.accessibilityLabel = ATLMSettingsHeaderAccessibilityLabel;
-    if (self.layerClient.isConnected){
+    
+    if (self.layerClient.isConnected) {
         [self.headerView updateConnectedStateWithString:ATLMConnected];
     } else {
         [self.headerView updateConnectedStateWithString:ATLMDisconnected];
+    }
+    
+    if (self.layerClient.currentSession.state == LYRSessionStateAuthenticated) {
+        [self.headerView updateAuthenticatedStateWithString:ATLMAuthenticated];
+    } else if (self.layerClient.currentSession.state == LYRSessionStateUnauthenticated) {
+        [self.headerView updateAuthenticatedStateWithString:ATLMUnauthenticated];
+    } else if (self.layerClient.currentSession.state == LYRSessionStateChallenged) {
+        [self.headerView updateAuthenticatedStateWithString:ATLMChallenged];
     }
     
     self.logoView = [[ATLLogoView alloc] initWithFrame:CGRectMake(0, 0, 320, 160)];
@@ -439,6 +451,10 @@ NSString *const ATLMPresenceStatusKey = @"presenceStatus";
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(layerDidDisconnect:) name:LYRClientDidDisconnectNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(layerIsConnecting:) name:LYRClientWillAttemptToConnectNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(layerDidLoseConnection:) name:LYRClientDidLoseConnectionNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(layerDidAuthenticateUser:) name:LYRClientDidAuthenticateNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(layerDidDeauthenticateUser:) name:LYRClientDidDeauthenticateNotification object:nil];
+    
     [self.layerClient.authenticatedUser addObserver:self forKeyPath:ATLMPresenceStatusKey options:(NSKeyValueObservingOptionNew) context:nil];
 }
 
@@ -467,6 +483,16 @@ NSString *const ATLMPresenceStatusKey = @"presenceStatus";
 - (void)layerDidLoseConnection:(NSNotification *)notification
 {
     [self.headerView updateConnectedStateWithString:ATLMLostConnection];
+}
+
+- (void)layerDidAuthenticateUser:(NSNotification *)notification
+{
+    [self.headerView updateAuthenticatedStateWithString:ATLMAuthenticated];
+}
+
+- (void)layerDidDeauthenticateUser:(NSNotification *)notification
+{
+    [self.headerView updateAuthenticatedStateWithString:ATLMUnauthenticated];
 }
 
 @end

@@ -27,6 +27,7 @@
 @property (nonatomic) ATLAvatarView *avatarView;
 @property (nonatomic) UILabel *nameLabel;
 @property (nonatomic) UILabel *connectionStateLabel;
+@property (nonatomic) UILabel *authenticationStateLabel;
 @property (nonatomic) UIView *bottomBorder;
 
 @end
@@ -68,6 +69,13 @@ static CGFloat const ATLMAvatarDiameter = 72;
         _connectionStateLabel.textColor = ATLBlueColor();
         _connectionStateLabel.textAlignment = NSTextAlignmentCenter;
         [self addSubview:_connectionStateLabel];
+        
+        _authenticationStateLabel = [[UILabel alloc] init];
+        _authenticationStateLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        _authenticationStateLabel.font = [UIFont systemFontOfSize:14];
+        _authenticationStateLabel.textColor = ATLBlueColor();
+        _authenticationStateLabel.textAlignment = NSTextAlignmentCenter;
+        [self addSubview:_authenticationStateLabel];
     
         _bottomBorder = [[UIView alloc] init];
         _bottomBorder.translatesAutoresizingMaskIntoConstraints = NO;
@@ -77,6 +85,7 @@ static CGFloat const ATLMAvatarDiameter = 72;
         [self configureAvatarViewConstraints];
         [self configureNameLabelConstraints];
         [self configureConnectionLabelConstraints];
+        [self configureAuthenticationLabelConstraints];
         [self configureBottomBorderConstraints];
     }
     return self;
@@ -106,17 +115,30 @@ static CGFloat const ATLMAvatarDiameter = 72;
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.connectionStateLabel attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.nameLabel attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0]];
 }
 
+- (void)configureAuthenticationLabelConstraints
+{
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.authenticationStateLabel attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeWidth multiplier:1.0 constant:0]];
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.authenticationStateLabel attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:0.0 constant:20]];
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.authenticationStateLabel attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0]];
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.authenticationStateLabel attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.connectionStateLabel attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0]];
+}
+
 - (void)configureBottomBorderConstraints
 {
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.bottomBorder  attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeWidth multiplier:1.0 constant:0]];
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.bottomBorder attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:0.5]];
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.bottomBorder attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0]];
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.bottomBorder attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.authenticationStateLabel attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0]];
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.bottomBorder attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0]];
 }
 
 - (void)updateConnectedStateWithString:(NSString *)string
 {
     self.connectionStateLabel.text = string;
+}
+
+- (void)updateAuthenticatedStateWithString:(NSString *)string
+{
+    self.authenticationStateLabel.text = string;
 }
 
 - (void)setNeedsDisplay
