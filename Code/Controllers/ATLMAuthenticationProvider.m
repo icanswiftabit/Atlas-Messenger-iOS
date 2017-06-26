@@ -131,7 +131,12 @@ NSString *const ATLMListUsersEndpoint = @"/users.json";
         // Legacy identity provider uses layer_identity_token
         NSString *identityToken = rawResponse[@"identity_token"] ?: rawResponse[@"layer_identity_token"];
         dispatch_async(dispatch_get_main_queue(), ^{
-            completion(identityToken, nil);
+            if (!identityToken) {
+                NSError *error = [NSError errorWithDomain:ATLMErrorDomain code:ATLMInvalidIdentityToken userInfo:@{NSLocalizedDescriptionKey: @"Authentication failed because the Identity token was nil."}];
+                completion(nil, error);
+            } else {
+                completion(identityToken, nil);
+            }
         });
     }] resume];
 }
