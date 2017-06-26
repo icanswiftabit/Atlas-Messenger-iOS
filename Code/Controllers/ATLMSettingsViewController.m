@@ -43,6 +43,7 @@ typedef NS_ENUM(NSInteger, ATLMPresenceStatusTableRow) {
 };
 
 typedef NS_ENUM(NSInteger, ATLMInfoTableRow) {
+    ATLMInfoTableRowMessengerVersion,
     ATLMInfoTableRowAtlasVersion,
     ATLMInfoTableRowLayerKitVersion,
     ATLMInfoTableRowAppIDRow,
@@ -197,6 +198,13 @@ NSString *const ATLMPresenceStatusKey = @"presenceStatus";
         case ATLMSettingsTableSectionInfo: {
             UITableViewCell *cell = [self defaultCellForIndexPath:indexPath];
             switch (indexPath.row) {
+                case ATLMInfoTableRowMessengerVersion: {
+                    cell.textLabel.text = @"Messenger Version";
+                    NSDictionary *infoDict = [[NSBundle mainBundle] infoDictionary];
+                    NSString *version = [infoDict objectForKey:@"CFBundleShortVersionString"];
+                    cell.detailTextLabel.text = version;
+                    break;
+                }
                 case ATLMInfoTableRowAtlasVersion:
                     cell.textLabel.text = @"Atlas Version";
                     cell.detailTextLabel.text = ATLVersionString;
