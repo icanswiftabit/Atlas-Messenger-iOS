@@ -274,14 +274,8 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
         return;
     }
     
-    // If `self` is in a navigation controller, push viewController
-    // Otherwise present it in a navigation controller
-    if (self.navigationController != nil) {
-        [self.navigationController pushViewController:viewController animated:true];
-    } else {
-        UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:viewController];
-        [sender presentViewController:navigationController animated:true completion:nil];
-    }
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:viewController];
+    [sender presentViewController:navigationController animated:true completion:nil];
 }
 
 #pragma mark - ATLConversationViewControllerDataSource
