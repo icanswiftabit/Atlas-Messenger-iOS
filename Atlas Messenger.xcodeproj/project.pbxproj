@@ -562,7 +562,7 @@
 		0A0C241B19477D8F00401B74 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				CLASSPREFIX = LS;
+				CLASSPREFIX = ATLM;
 				LastUpgradeCheck = 0810;
 				ORGANIZATIONNAME = "Layer, Inc.";
 				TargetAttributes = {
