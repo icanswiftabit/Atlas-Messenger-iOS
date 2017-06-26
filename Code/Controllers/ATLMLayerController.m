@@ -50,6 +50,7 @@ NSString *const ATLMLayerControllerErrorDomain = @"ATLMLayerControllerErrorDomai
     self = [super init];
     if (self) {
         _layerClient = [LYRClient clientWithAppID:layerAppID delegate:self options:clientOptions];
+        _layerClient.debuggingEnabled = YES;
         _layerClient.autodownloadMIMETypes = [NSSet setWithObjects:ATLMIMETypeImageJPEGPreview, ATLMIMETypeTextPlain, nil];
         _authenticationProvider = authenticationProvider;
     }
