@@ -24,20 +24,61 @@ PODS:
     - ApiAI/Core
   - ApiAI/VoiceRequest (0.7.0):
     - ApiAI/Core
-  - Atlas (1.1.0):
-    - LayerKit (>= 0.26.2)
+  - Atlas (1.1.1):
+    - LayerKit (>= 0.26.5)
   - ClusterPrePermissions (0.8.1)
+  - CocoaLumberjack (2.2.0):
+    - CocoaLumberjack/Default (= 2.2.0)
+    - CocoaLumberjack/Extensions (= 2.2.0)
+  - CocoaLumberjack/Core (2.2.0)
+  - CocoaLumberjack/Default (2.2.0):
+    - CocoaLumberjack/Core
+  - CocoaLumberjack/Extensions (2.2.0):
+    - CocoaLumberjack/Default
+  - CocoaSPDY (20151203203757026)
   - Expecta (1.0.5)
+  - FMDB/standard (2.5-20151203150449028)
+  - FMDBMigrationManager/System (1.4.1):
+    - FMDB/standard (>= 2.3)
+  - GCNetworkReachability (1.3.2)
   - KIF (3.5.2):
     - KIF/Core (= 3.5.2)
   - KIF/Core (3.5.2)
   - KIFViewControllerActions (1.0.2):
     - KIF (>= 2.0.0)
   - Kingfisher (3.9.1)
-  - LayerKit (0.26.4)
+  - layer-client-messaging-schema (20170531164227993.7)
+  - LayerKit (0.26.9):
+    - CocoaLumberjack (~> 2.2.0)
+    - CocoaSPDY (= 20151203203757026)
+    - FMDB/standard (= 2.5-20151203150449028)
+    - FMDBMigrationManager/System (~> 1.4.1)
+    - GCNetworkReachability (~> 1.3.2)
+    - layer-client-messaging-schema (= 20170531164227993.7)
+    - LayerKit/Public (= 0.26.9)
+    - LayerThrift (= 0.93.0)
+    - thrift (~> 0.9.3)
+    - TransitionKit (~> 2.2.1)
+    - ZipArchive (~> 1.4)
+  - LayerKit/Public (0.26.9):
+    - CocoaLumberjack (~> 2.2.0)
+    - CocoaSPDY (= 20151203203757026)
+    - FMDB/standard (= 2.5-20151203150449028)
+    - FMDBMigrationManager/System (~> 1.4.1)
+    - GCNetworkReachability (~> 1.3.2)
+    - layer-client-messaging-schema (= 20170531164227993.7)
+    - LayerThrift (= 0.93.0)
+    - thrift (~> 0.9.3)
+    - TransitionKit (~> 2.2.1)
+    - ZipArchive (~> 1.4)
+  - LayerThrift (0.93.0):
+    - thrift (~> 0.9.3)
   - LYRCountDownLatch (0.9.0)
   - OCMock (3.4)
   - SVProgressHUD (2.1.2)
+  - thrift (0.9.3)
+  - TransitionKit (2.2.1)
+  - ZipArchive (1.4.0)
 
 DEPENDENCIES:
   - ApiAI
@@ -45,29 +86,50 @@ DEPENDENCIES:
   - ClusterPrePermissions (~> 0.1)
   - Expecta
   - KIF
-  - KIFViewControllerActions
+  - KIFViewControllerActions (from `https://github.com/blakewatters/KIFViewControllerActions.git`)
   - Kingfisher
+  - LayerKit (from `~/Development/Layer-Dev/LayerKit`)
   - LYRCountDownLatch
   - OCMock
   - SVProgressHUD
+  - TransitionKit
 
 EXTERNAL SOURCES:
   Atlas:
     :path: "~/Development/Layer-Dev/Atlas-iOS-Larry"
+  KIFViewControllerActions:
+    :git: https://github.com/blakewatters/KIFViewControllerActions.git
+  LayerKit:
+    :path: "~/Development/Layer-Dev/LayerKit"
+
+CHECKOUT OPTIONS:
+  KIFViewControllerActions:
+    :commit: f9bb47771e29adfa0873aff9bc3652587613608e
+    :git: https://github.com/blakewatters/KIFViewControllerActions.git
 
 SPEC CHECKSUMS:
   ApiAI: 25f763ddd88139dc5fe6794a905300244190d168
-  Atlas: 15932c6132b724d46d65868edc9ab2489416c24e
+  Atlas: 16076505d7182862a0400da5520a48a807fc5b43
   ClusterPrePermissions: 168c127a658e423062550dd9c56fe26042a58bce
+  CocoaLumberjack: 17fe8581f84914d5d7e6360f7c70022b173c3ae0
+  CocoaSPDY: 0b06986c8eed0240ee1c3893415675106d3a44cf
   Expecta: e1c022fcd33910b6be89c291d2775b3fe27a89fe
+  FMDB: d635067c2ae14f3e1884d31d1ecaad2d2f2d9399
+  FMDBMigrationManager: d52007f328ea0665e8985ca8a33500707aef084f
+  GCNetworkReachability: 2a7dd53d362220326b3e38df68c91b3ef84418d1
   KIF: f2a6025bb3f11692df675054a134d43a9ec2d7db
   KIFViewControllerActions: 923795dc4bd4ca5657841ce7455ce67447693861
   Kingfisher: 6729a0baaa458245bfb8cd5a1296c71c10d6eb6c
-  LayerKit: 0be814788498698b82a9e46a692b66bb3ec0ca48
+  layer-client-messaging-schema: 41c4150bd2615b08943ec1282c501181a5d96152
+  LayerKit: 3e801b05db3d108d2fae2e699117e6b81d262be1
+  LayerThrift: 216f85b2c3b99e90890938c610acb1870655bd09
   LYRCountDownLatch: 72a444f729ca5a8c6157c0b58f335a44e6702b48
   OCMock: 35ae71d6a8fcc1b59434d561d1520b9dd4f15765
   SVProgressHUD: c404a55d78acbeb7ebb78b76d3faf986475a6994
+  thrift: 206849d78773b19e1be3cc1bbe094371c0adfbe2
+  TransitionKit: 9ceccda4cd0cdc0a05ef85eb235e5a3292c3c250
+  ZipArchive: e25a4373192673e3229ac8d6e9f64a3e5713c966
 
-PODFILE CHECKSUM: a52bd1659cc7deb520aef196560f94e7051ff510
+PODFILE CHECKSUM: dfca155c4a1e2f096d923efc2c2bb4171ab73ebe
 
 COCOAPODS: 1.1.1

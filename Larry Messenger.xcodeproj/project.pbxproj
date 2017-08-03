@@ -86,6 +86,11 @@
 		AA2BEEB71ED4C04A00A8F992 /* VoxeetManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2BEEB11ED4C04A00A8F992 /* VoxeetManager.swift */; };
 		AA441A931DD4D94D00F93295 /* ATLMUserCredentials.m in Sources */ = {isa = PBXBuildFile; fileRef = AA441A921DD4D94D00F93295 /* ATLMUserCredentials.m */; };
 		AA8ABA311ED62F84008059D6 /* Pods_Larry_MessengerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA8ABA301ED62F84008059D6 /* Pods_Larry_MessengerTests.framework */; };
+		AA9234B61EDE903C00AEBE42 /* ATLMTranslationCard.m in Sources */ = {isa = PBXBuildFile; fileRef = AA9234B31EDE903C00AEBE42 /* ATLMTranslationCard.m */; };
+		AA9234B71EDE903C00AEBE42 /* ATLMTranslationCardCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AA9234B51EDE903C00AEBE42 /* ATLMTranslationCardCollectionViewCell.m */; };
+		AAD356731EDE2F49005ECC5A /* LYRTextTranslationOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = AAD3566D1EDE2F49005ECC5A /* LYRTextTranslationOperation.m */; };
+		AAD356741EDE2F49005ECC5A /* WEFLYRConcurrentOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = AAD3566F1EDE2F49005ECC5A /* WEFLYRConcurrentOperation.m */; };
+		AAD356751EDE2F49005ECC5A /* WEFLYRConcurrentOperationStateMachine.m in Sources */ = {isa = PBXBuildFile; fileRef = AAD356711EDE2F49005ECC5A /* WEFLYRConcurrentOperationStateMachine.m */; };
 		D016D0FC1D20D9D900D9AA4F /* ATLMApplicationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D016D0FB1D20D9D900D9AA4F /* ATLMApplicationViewController.m */; };
 		D0C483D81E553F8D00DB02CF /* TestLayerConfiguration-invalid.json in Resources */ = {isa = PBXBuildFile; fileRef = D0C483D61E553E5300DB02CF /* TestLayerConfiguration-invalid.json */; };
 		D0C483DA1E55408100DB02CF /* TestLayerConfiguration-appIDNotSet.json in Resources */ = {isa = PBXBuildFile; fileRef = D0C483D91E55408100DB02CF /* TestLayerConfiguration-appIDNotSet.json */; };
@@ -265,6 +270,16 @@
 		AA441A921DD4D94D00F93295 /* ATLMUserCredentials.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMUserCredentials.m; sourceTree = "<group>"; };
 		AA441A941DD4D96900F93295 /* ATLMUserCredentials.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ATLMUserCredentials.h; sourceTree = "<group>"; };
 		AA8ABA301ED62F84008059D6 /* Pods_Larry_MessengerTests.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Pods_Larry_MessengerTests.framework; path = "Pods/../build/Debug-iphoneos/Pods_Larry_MessengerTests.framework"; sourceTree = "<group>"; };
+		AA9234B21EDE903C00AEBE42 /* ATLMTranslationCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMTranslationCard.h; sourceTree = "<group>"; };
+		AA9234B31EDE903C00AEBE42 /* ATLMTranslationCard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMTranslationCard.m; sourceTree = "<group>"; };
+		AA9234B41EDE903C00AEBE42 /* ATLMTranslationCardCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMTranslationCardCollectionViewCell.h; sourceTree = "<group>"; };
+		AA9234B51EDE903C00AEBE42 /* ATLMTranslationCardCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMTranslationCardCollectionViewCell.m; sourceTree = "<group>"; };
+		AAD3566C1EDE2F49005ECC5A /* LYRTextTranslationOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYRTextTranslationOperation.h; sourceTree = "<group>"; };
+		AAD3566D1EDE2F49005ECC5A /* LYRTextTranslationOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYRTextTranslationOperation.m; sourceTree = "<group>"; };
+		AAD3566E1EDE2F49005ECC5A /* WEFLYRConcurrentOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WEFLYRConcurrentOperation.h; sourceTree = "<group>"; };
+		AAD3566F1EDE2F49005ECC5A /* WEFLYRConcurrentOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WEFLYRConcurrentOperation.m; sourceTree = "<group>"; };
+		AAD356701EDE2F49005ECC5A /* WEFLYRConcurrentOperationStateMachine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WEFLYRConcurrentOperationStateMachine.h; sourceTree = "<group>"; };
+		AAD356711EDE2F49005ECC5A /* WEFLYRConcurrentOperationStateMachine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WEFLYRConcurrentOperationStateMachine.m; sourceTree = "<group>"; };
 		B53937831A24F6AF00DE60F9 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
 		CA1D93E68E9105BA0139B1C2 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D016D0FA1D20D9D900D9AA4F /* ATLMApplicationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMApplicationViewController.h; sourceTree = "<group>"; };
@@ -437,6 +452,8 @@
 		1E8D72271E862ED2000E058A /* Cards */ = {
 			isa = PBXGroup;
 			children = (
+				AA9234B11EDE903C00AEBE42 /* TranslationCard */,
+				AA2BEEA71ED4C04A00A8F992 /* Voxeet */,
 				1EA4E7F71E8EB16400C34971 /* FileCard */,
 				1E8D722E1E862F22000E058A /* TextPoll */,
 				1E8D72261E862EBB000E058A /* SchedulingCard */,
@@ -544,7 +561,7 @@
 		259A57111950EB76000E27B0 /* Code */ = {
 			isa = PBXGroup;
 			children = (
-				AA2BEEA71ED4C04A00A8F992 /* Voxeet */,
+				AAD356681EDE2F49005ECC5A /* Services */,
 				1E8D72271E862ED2000E058A /* Cards */,
 				251D8D861A9688C40000BFA2 /* Controllers */,
 				0A0C242519477D8F00401B74 /* Frameworks */,
@@ -626,7 +643,8 @@
 				AA2BEEA81ED4C04A00A8F992 /* Views */,
 				AA2BEEB11ED4C04A00A8F992 /* VoxeetManager.swift */,
 			);
-			path = Voxeet;
+			name = Voxeet;
+			path = ../Voxeet;
 			sourceTree = "<group>";
 		};
 		AA2BEEA81ED4C04A00A8F992 /* Views */ = {
@@ -656,6 +674,38 @@
 				AA441A921DD4D94D00F93295 /* ATLMUserCredentials.m */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		AA9234B11EDE903C00AEBE42 /* TranslationCard */ = {
+			isa = PBXGroup;
+			children = (
+				AA9234B21EDE903C00AEBE42 /* ATLMTranslationCard.h */,
+				AA9234B31EDE903C00AEBE42 /* ATLMTranslationCard.m */,
+				AA9234B41EDE903C00AEBE42 /* ATLMTranslationCardCollectionViewCell.h */,
+				AA9234B51EDE903C00AEBE42 /* ATLMTranslationCardCollectionViewCell.m */,
+			);
+			path = TranslationCard;
+			sourceTree = "<group>";
+		};
+		AAD356681EDE2F49005ECC5A /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				AAD356691EDE2F49005ECC5A /* Translator */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		AAD356691EDE2F49005ECC5A /* Translator */ = {
+			isa = PBXGroup;
+			children = (
+				AAD3566C1EDE2F49005ECC5A /* LYRTextTranslationOperation.h */,
+				AAD3566D1EDE2F49005ECC5A /* LYRTextTranslationOperation.m */,
+				AAD3566E1EDE2F49005ECC5A /* WEFLYRConcurrentOperation.h */,
+				AAD3566F1EDE2F49005ECC5A /* WEFLYRConcurrentOperation.m */,
+				AAD356701EDE2F49005ECC5A /* WEFLYRConcurrentOperationStateMachine.h */,
+				AAD356711EDE2F49005ECC5A /* WEFLYRConcurrentOperationStateMachine.m */,
+			);
+			path = Translator;
 			sourceTree = "<group>";
 		};
 		D61B10981A6F2DA1009BFA9C /* Controllers */ = {
@@ -971,6 +1021,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AA9234B61EDE903C00AEBE42 /* ATLMTranslationCard.m in Sources */,
 				1E8D72251E862EB2000E058A /* ATLMSchedulingCardCollectionViewCell.m in Sources */,
 				4085884F1E3C0A9000C7831C /* ATLMAuthenticationProvider.m in Sources */,
 				D016D0FC1D20D9D900D9AA4F /* ATLMApplicationViewController.m in Sources */,
@@ -999,16 +1050,20 @@
 				AA26E0FF1ECA73840004E826 /* ATLMLarryController.m in Sources */,
 				408588481E3C097700C7831C /* main.m in Sources */,
 				1E099A5C1E6E400300C8DA1F /* ATLMCard.m in Sources */,
+				AAD356741EDE2F49005ECC5A /* WEFLYRConcurrentOperation.m in Sources */,
 				251D8DD41A9688C50000BFA2 /* ATLMUtilities.m in Sources */,
 				AA441A931DD4D94D00F93295 /* ATLMUserCredentials.m in Sources */,
 				251D8DD01A9688C50000BFA2 /* ATLMErrors.m in Sources */,
 				251D8DD11A9688C50000BFA2 /* ATLMHTTPResponseSerializer.m in Sources */,
 				251D8DD71A9688C50000BFA2 /* ATLMInputTableViewCell.m in Sources */,
+				AAD356751EDE2F49005ECC5A /* WEFLYRConcurrentOperationStateMachine.m in Sources */,
 				4085884E1E3C0A1500C7831C /* ATLMConfiguration.m in Sources */,
+				AAD356731EDE2F49005ECC5A /* LYRTextTranslationOperation.m in Sources */,
 				AA2BEEB51ED4C04A00A8F992 /* VTConferenceViewControllerAvatarCell.m in Sources */,
 				251D8DDB1A9688C50000BFA2 /* ATLMOverlayView.m in Sources */,
 				251D8DD51A9688C50000BFA2 /* ATLLogoView.m in Sources */,
 				251D8DC71A9688C50000BFA2 /* ATLMNavigationController.m in Sources */,
+				AA9234B71EDE903C00AEBE42 /* ATLMTranslationCardCollectionViewCell.m in Sources */,
 				251D8DD61A9688C50000BFA2 /* ATLMCenterTextTableViewCell.m in Sources */,
 				AA2BEEB21ED4C04A00A8F992 /* VTConferenceBubbleView.m in Sources */,
 				1E4999BC1E870A5C0022D886 /* ATLMCardResponse.m in Sources */,

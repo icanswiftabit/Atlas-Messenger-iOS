@@ -276,7 +276,7 @@ static NSString *const ATLMBlockIconName = @"AtlasResource.bundle/block";
         cell.accessoryView.accessibilityLabel = @"Blocked";
         cell.accessoryView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:ATLMBlockIconName]];
     }
-    [cell presentParticipant:participant withSortType:ATLParticipantPickerSortTypeFirstName shouldShowAvatarItem:YES];
+    [cell presentParticipant:participant withSortType:ATLParticipantPickerSortTypeFirstName shouldShowAvatarItem:YES presenceStatusEnabled:YES];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
 }
 

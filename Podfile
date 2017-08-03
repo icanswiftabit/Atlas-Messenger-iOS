@@ -17,8 +17,9 @@ target 'Larry Messenger' do
   
   pod 'ApiAI'
   pod 'ClusterPrePermissions', '~> 0.1'
-  pod 'SVProgressHUD'
   pod 'Kingfisher'
+  pod 'SVProgressHUD'
+  pod 'TransitionKit'
   
   target 'Larry MessengerTests' do
       inherit! :search_paths

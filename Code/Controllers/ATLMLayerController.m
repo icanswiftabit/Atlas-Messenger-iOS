@@ -150,7 +150,6 @@ NSString *const ATLMLayerControllerErrorDomain = @"ATLMLayerControllerErrorDomai
 - (void)layerClient:(LYRClient *)client didAuthenticateAsUserID:(NSString *)userID
 {
     NSLog(@"Layer Client did authenticate as userID=%@", userID);
-    [VoxeetManager openSessionWithIdentity:self.layerClient.authenticatedUser];
 }
 
 - (void)layerClientDidDeauthenticate:(LYRClient *)client

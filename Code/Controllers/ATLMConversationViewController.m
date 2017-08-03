@@ -33,10 +33,15 @@
 #import "ATLMCardResponse.h"
 #import "ATLMCardResponseCollectionViewCell.h"
 #import "Larry_Messenger-Swift.h"
+#import "LYRMessage+Translation.h"
+#import "LYRTextTranslationOperation.h"
 #import "VTConferenceCollectionViewCell.h"
 
-NSString *const VTMIMETypeConference = @"vt/conference";
-NSString *const VTConferenceCollectionViewCellIdentifier = @"VTConferenceCollectionViewCell";
+static NSString *const VTMIMETypeConference = @"vt/conference";
+static NSString *const VTConferenceCollectionViewCellIdentifier = @"VTConferenceCollectionViewCell";
+static NSString *const LYRAzureCognitiveServicesSubscriptionKey = @"18d2ea8dd7a14f17becdeec28244fa68";
+static NSString *const LYRWEFMessageMetadataMIMEType = @"application/vnd.weforum.message-metadata+json";
+static NSString *const LYRWEFMessageMetadataSourceLanguageCode = @"source_language";
 
 static NSDateFormatter *ATLMShortTimeFormatter()
 {
@@ -138,17 +143,24 @@ static ATLMDateProximity ATLMProximityToDate(NSDate *date)
 }
 
 @interface ATLMConversationViewController () <ATLMConversationDetailViewControllerDelegate, ATLParticipantTableViewControllerDelegate>
-@property (nonatomic, copy, readwrite) NSDictionary<NSString *, Class<ATLMCardCellPesentable>> *factories;
 
+@property (nonatomic, copy, readwrite) NSDictionary<NSString *, Class<ATLMCardCellPesentable>> *factories;
+@property (nonatomic) NSOperationQueue *translationQueue;
+@property (nonatomic) ATLConversationDataSource *conversationDataSource;
+
+- (LYRMessage *)messageForMessageParts:(NSArray *)parts MIMEType:(NSString *)MIMEType pushText:(NSString *)pushText;
 - (nullable NSString *)cardCellFactoryReuseIdentifierForMesssage:(LYRMessage *)message;
 
 @end
 
 @implementation ATLMConversationViewController
 
-NSString *const ATLMConversationViewControllerAccessibilityLabel = @"Conversation View Controller";
-NSString *const ATLMDetailsButtonAccessibilityLabel = @"Details Button";
-NSString *const ATLMDetailsButtonLabel = @"Details";
+static NSString *const ATLMConversationViewControllerAccessibilityLabel = @"Conversation View Controller";
+static NSString *const ATLMDetailsButtonAccessibilityLabel = @"Details Button";
+static NSString *const ATLMDetailsButtonLabel = @"Details";
+static NSString *const LYRTranslationServiceAccessTokenUserDefaultsKey = @"org.weforum.translation-access-token";
+static NSString *const LYRTranslationServiceAccessTokenKey = @"access_token";
+static NSString *const LYRTranslationServiceAccessTokenExpirationKey = @"expiration_date";
 
 + (instancetype)conversationViewControllerWithLayerController:(ATLMLayerController *)layerController
 {
@@ -203,6 +215,9 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
     [self configureUserInterfaceAttributes];
     [self configureVoxeet];
     [self registerNotificationObservers];
+    
+    self.translationQueue = [NSOperationQueue new];
+    self.translationQueue.name = @"weforum.org.translation-queue";
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -244,6 +259,34 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
 }
 
 #pragma mark - ATLConversationViewControllerDelegate
+
+- (NSOrderedSet <LYRMessage*> *)conversationViewController:(ATLConversationViewController *)viewController messagesForMediaAttachments:(NSArray <ATLMediaAttachment*> *)mediaAttachments
+{
+    NSMutableOrderedSet *messages = [NSMutableOrderedSet new];
+    for (ATLMediaAttachment *attachment in mediaAttachments) {
+        NSMutableArray *messageParts = [ATLMessagePartsWithMediaAttachment(attachment) mutableCopy];
+        
+        if ([attachment.mediaMIMEType isEqualToString:ATLMIMETypeTextPlain]) {
+            NSString *primaryLanguage = self.messageInputToolbar.textInputView.textInputMode.primaryLanguage;
+            NSLocale *locale = [NSLocale localeWithLocaleIdentifier:primaryLanguage];
+            NSString *sourceLanguageCode = [locale objectForKey:NSLocaleLanguageCode];
+            
+            if (sourceLanguageCode) {
+                NSDictionary *messageMetadata = @{ LYRWEFMessageMetadataSourceLanguageCode: sourceLanguageCode };
+                NSData *data = [NSJSONSerialization dataWithJSONObject:messageMetadata options:kNilOptions error:nil];
+                if (data) {
+                    [messageParts addObject:[LYRMessagePart messagePartWithMIMEType:LYRWEFMessageMetadataMIMEType data:data]];
+                }
+            }
+        }
+        
+        LYRMessage *message = [self messageForMessageParts:messageParts MIMEType:attachment.mediaMIMEType pushText:(([attachment.mediaMIMEType isEqualToString:ATLMIMETypeTextPlain]) ? attachment.textRepresentation : nil)];
+        if (message) {
+            [messages addObject:message];
+        }
+    }
+    return messages;
+}
 
 /**
  Atlas - Informs the delegate of a successful message send. Atlas Messenger adds a `Details` button to the navigation bar if this is the first message sent within a new conversation.
@@ -343,7 +386,13 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
         
         UIMenuItem *copyMenuItem = [[UIMenuItem alloc] initWithTitle:@"Copy" action:@selector(copyMessage:)];
         UIMenuItem *deleteMenuItem = [[UIMenuItem alloc] initWithTitle:@"Delete" action:@selector(deleteMessage:)];
-        abcvc.bubbleView.menuControllerActions = [NSArray arrayWithObjects:copyMenuItem, deleteMenuItem, nil];
+        
+        if ([self canMessageBeTranslated:message]) {
+            UIMenuItem *translateMenuItem = [[UIMenuItem alloc] initWithTitle:@"Translate" action:@selector(translateMessage:)];
+            abcvc.bubbleView.menuControllerActions = [NSArray arrayWithObjects:copyMenuItem, deleteMenuItem, translateMenuItem, nil];
+        } else {
+            abcvc.bubbleView.menuControllerActions = [NSArray arrayWithObjects:copyMenuItem, deleteMenuItem, nil];
+        }
     }
     
     if ([cell isKindOfClass:[VTConferenceCollectionViewCell class]]) {
@@ -436,10 +485,10 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
     }
 }
 
-- (void)conversationViewController:(ATLConversationViewController *)viewController didSelectActionSheetCardType:(enum ATLMActionSheetCardType)cardType
+- (void)conversationViewController:(ATLConversationViewController *)viewController didSelectActionSheetCardType:(enum ATLActionSheetCardType)cardType
 {
     switch (cardType) {
-        case ATLMActionSheetCardTypeVoxeet:
+        case ATLActionSheetCardTypeVoxeet:
             [self sendVoxeetCard];
             break;
             
@@ -691,7 +740,7 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
     NSAssert([self isLarryConversation], @"Cannot send a message as Larry from outside the Larry conversation.");
 }
 
-#pragma mark - VoxeetConferenceKit Helpers
+#pragma mark - VoxeetConferenceKit Helper Methods
 
 - (void)sendVoxeetCard
 {
@@ -745,6 +794,7 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
     NSString *conferenceID = json[@"conferenceId"];
     if (conferenceID != nil) {
         NSLog(@"Voxeet call ended for conferenceID = %@", conferenceID);
+        [VoxeetManager stopConferenceWithConferenceID:conferenceID];
         VTConferenceCollectionViewCell *cell = [self conferenceCellWithConferenceID:conferenceID];
         [self updateVoxeetCell:cell isLive:NO];
     }
@@ -752,7 +802,10 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
 
 - (void)joinVoxeetConference:(NSString *)conferenceID
 {
-    [VoxeetManager startConferenceWithConferenceID:conferenceID authenticatedUser:self.layerController.layerClient.authenticatedUser participants:self.conversation.participants success:^(id _Nonnull rawData) {
+    LYRIdentity *authenticatedUser = self.layerController.layerClient.authenticatedUser;
+    NSMutableSet *participants = [self.conversation.participants mutableCopy];
+    
+    [VoxeetManager startConferenceWithConferenceID:conferenceID authenticatedUser:authenticatedUser identities:participants success:^(id _Nonnull rawData) {
         VTConferenceCollectionViewCell *cell = [self conferenceCellWithConferenceID:conferenceID];
         NSDictionary *statusData = [self conferenceStatusDataFromRawData:rawData];
         [self updateVoxeetCell:cell withConferenceData:statusData];
@@ -891,6 +944,95 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
     [conferenceData setObject:isLive forKey:@"isLive"];
     
     return conferenceData;
+}
+
+#pragma mark - Translation Helper Methods
+
+- (BOOL) canMessageBeTranslated:(LYRMessage *)message
+{
+    // When there is a text part
+    if (![[message.parts valueForKey:@"MIMEType"] containsObject:ATLMIMETypeTextPlain]) {
+        return NO;
+    }
+    
+    // And it hasn't been translated already
+    if (message.translatedText) {
+        return NO;
+    }
+    
+    // And the message is in a different language than the device locale
+    LYRMessagePart *metadataMessagePart = ATLMessagePartForMIMEType(message, LYRWEFMessageMetadataMIMEType);
+    if (metadataMessagePart) {
+        NSDictionary *metadata = [NSJSONSerialization JSONObjectWithData:metadataMessagePart.data options:kNilOptions error:nil];
+        NSString *messageLanguageCode = metadata[LYRWEFMessageMetadataSourceLanguageCode];
+        NSString *deviceLanguageCode = [[NSLocale autoupdatingCurrentLocale] objectForKey:NSLocaleLanguageCode];
+        if ([messageLanguageCode isEqualToString:deviceLanguageCode]) {
+            return NO;
+        }
+    }
+    
+    return YES;
+}
+
+- (void)performTranslationOfMessagePart:(LYRMessagePart *)textMessagePart withMetadataMessagePart:(LYRMessagePart *)metadataMessagePart
+{
+    NSString *textToTranslate = [[NSString alloc] initWithData:textMessagePart.data encoding:NSUTF8StringEncoding];
+    NSString *sourceLanguageCode = nil;
+    if (metadataMessagePart) {
+        NSDictionary *metadata = [NSJSONSerialization JSONObjectWithData:metadataMessagePart.data options:kNilOptions error:nil];
+        sourceLanguageCode = metadata[LYRWEFMessageMetadataSourceLanguageCode];
+    }
+    NSString *destinationLanguageCode = [[NSLocale autoupdatingCurrentLocale] objectForKey:NSLocaleLanguageCode];
+    
+    // Perform the translation and show the results
+    NSString *accessToken = [self LYRTranslationCachedAccessToken];
+    LYRTextTranslationOperation *translationOperation = [LYRTextTranslationOperation translationOperationWithSubscriptionKey:LYRAzureCognitiveServicesSubscriptionKey accessToken:accessToken forTranslatingText:textToTranslate fromLanguageCode:sourceLanguageCode toLanguageCode:destinationLanguageCode];
+    __weak typeof(translationOperation) weakOperation = translationOperation;
+    [translationOperation setCompletionBlockWithBlock:^(NSString * _Nullable translatedText, NSError * _Nullable error) {
+        if (translatedText) {
+            // Associate the translation with the message and reload the cell to display it
+            LYRMessage *message = textMessagePart.message;
+            message.translatedText = translatedText;
+            
+            [ATLMessageCollectionViewCell evitCachedHeightForMessage:message];
+            NSIndexPath *indexPath = [self.conversationDataSource.queryController indexPathForObject:message];
+            NSIndexPath *collectionViewIndexPath = [self.conversationDataSource collectionViewIndexPathForQueryControllerIndexPath:indexPath];
+            [self.collectionView reloadSections:[NSIndexSet indexSetWithIndex:collectionViewIndexPath.section]];
+            [self.collectionView scrollToItemAtIndexPath:collectionViewIndexPath atScrollPosition:UICollectionViewScrollPositionCenteredVertically animated:YES];
+            
+            // Cache the access token if we got a new one
+            if (weakOperation.accessTokenExpiresAt) {
+                [self LYRTranslationCacheAccessToken:weakOperation.accessToken withExpirationDate:weakOperation.accessTokenExpiresAt];
+            }
+        } else {
+            NSError *error;
+            NSString *message = [NSString stringWithFormat:@"Error: '%@'", error];
+            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Translation Failed" message:message preferredStyle:UIAlertControllerStyleAlert];
+            [alertController addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
+            [self presentViewController:alertController animated:YES completion:nil];
+        }
+    }];
+    [self.translationQueue addOperation:translationOperation];
+}
+
+- (NSString *)LYRTranslationCachedAccessToken
+{
+    NSDictionary *accessTokenInfo = [[NSUserDefaults standardUserDefaults] objectForKey:LYRTranslationServiceAccessTokenUserDefaultsKey];
+    if (accessTokenInfo) {
+        NSDate *accessTokenExpiration = accessTokenInfo[LYRTranslationServiceAccessTokenExpirationKey];
+        if ([[NSDate date] timeIntervalSinceDate:accessTokenExpiration] < 0) {
+            return accessTokenInfo[LYRTranslationServiceAccessTokenKey];
+        } else {
+            [[NSUserDefaults standardUserDefaults] setObject:nil forKey:LYRTranslationServiceAccessTokenUserDefaultsKey];
+        }
+    }
+    return nil;
+}
+
+- (void)LYRTranslationCacheAccessToken:(NSString *)accessToken withExpirationDate:(NSDate *)expirationDate
+{
+    NSDictionary *accessTokenInfo = @{ LYRTranslationServiceAccessTokenKey: accessToken, LYRTranslationServiceAccessTokenExpirationKey: expirationDate };
+    [[NSUserDefaults standardUserDefaults] setObject:accessTokenInfo forKey:LYRTranslationServiceAccessTokenUserDefaultsKey];
 }
 
 #pragma mark - Details Button Actions
@@ -1146,6 +1288,29 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
     } else {
         NSData *imageData = UIImagePNGRepresentation(cell.bubbleView.bubbleImageView.image);
         [pasteboard setData:imageData forPasteboardType:ATLPasteboardImageKey];
+    }
+}
+
+- (void)translateMessage:(id)sender
+{
+    if (![[sender class] isSubclassOfClass:[UIMenuController class]]) {
+        return;
+    }
+    
+    CGPoint point = [(UIMenuController *)sender menuFrame].origin;
+    CGPoint offsetPoint = self.collectionView.contentOffset;
+    CGPoint realPoint = CGPointMake(point.x + offsetPoint.x, point.y + offsetPoint.y + 64);
+    NSIndexPath *path = [self.collectionView indexPathForItemAtPoint:realPoint];
+    if (!path) {
+        return;
+    }
+    
+    __block ATLMessageCollectionViewCell *cell = (ATLMessageCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:path];
+    LYRMessage *message = cell.message;
+    LYRMessagePart *messagePart = ATLMessagePartForMIMEType(message, ATLMIMETypeTextPlain);
+    if (messagePart) {
+        LYRMessagePart *messageMetadata = ATLMessagePartForMIMEType(message, LYRWEFMessageMetadataMIMEType);
+        [self performTranslationOfMessagePart:messagePart withMetadataMessagePart:messageMetadata];
     }
 }
 

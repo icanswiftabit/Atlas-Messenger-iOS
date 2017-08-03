@@ -34,12 +34,6 @@ import VoxeetConferenceKit
         VoxeetConferenceKit.shared.appearMaximized = false
     }
     
-    public static func openSession(identity: LYRIdentity) {
-        let name = identity.firstName ?? identity.displayName ?? ""
-        let voxeetParticipant = VoxeetParticipant(id: identity.userID, name: name, avatarURL: identity.avatarImageURL)
-        VoxeetConferenceKit.shared.openSession(participant: voxeetParticipant)
-    }
-    
     public static func createConference(completion: @escaping (_ conferenceID: String?) -> Void) {
         VoxeetSDK.shared.conference.create(parameters: nil, success: { (confId, confAlias) in
             print("voxeet conference created")
@@ -50,18 +44,14 @@ import VoxeetConferenceKit
         }
     }
     
-    public static func startConference(conferenceID: String, authenticatedUser: LYRIdentity, participants: Set<LYRIdentity>, success successCompletion: ((Any) -> Swift.Void)?, fail failCompletion: ((Any) -> Swift.Void)?) {
-        var voxeetParticipants: [VoxeetParticipant] = [VoxeetParticipant]()
-        for participant in participants {
-            let name = participant.firstName ?? participant.displayName
-            voxeetParticipants.append(VoxeetParticipant(id: participant.userID, name: name!, avatarURL: participant.avatarImageURL))
+    public static func startConference(conferenceID: String, authenticatedUser: LYRIdentity, identities: Set<LYRIdentity>, success successCompletion: ((Any) -> Swift.Void)?, fail failCompletion: ((Any) -> Swift.Void)?) {
+        var participants: [VoxeetParticipant] = [VoxeetParticipant]()
+        for identity in identities {
+            let participant = self.getVoxeetParticipant(identity: identity)
+            participants.append(participant)
         }
         
-        let name = authenticatedUser.firstName ?? authenticatedUser.displayName ?? ""
-        let participant = VoxeetParticipant(id: authenticatedUser.userID, name: name, avatarURL: authenticatedUser.avatarImageURL)
-        VoxeetConferenceKit.shared.updateSession(participant: participant)
-        
-        VoxeetConferenceKit.shared.initializeConference(id: conferenceID, participants: voxeetParticipants)
+        VoxeetConferenceKit.shared.initializeConference(id: conferenceID, participants: participants)
         VoxeetConferenceKit.shared.startConference(sendInvitation: false, success: { (confID) in
             successCompletion!(confID)
         }) { (error) in
@@ -71,14 +61,16 @@ import VoxeetConferenceKit
     }
     
     public static func stopConference(conferenceID: String) {
-        VoxeetConferenceKit.shared.stopConference()
+        VoxeetConferenceKit.shared.stopConference(completion: { (error) in
+            
+        })
     }
     
     public static func status(conferenceID confID: String, success successCompletion: ((Any) -> Swift.Void)?) {
         VoxeetSDK.shared.conference.status(conferenceID: confID, success: { (json) in
             successCompletion!(json)
         }) { (error) in
-            //failCompletion?(error)
+            print("Failed to fetch Voxeet conference status with error: \(error)")
         }
     }
     
@@ -86,9 +78,13 @@ import VoxeetConferenceKit
         VoxeetSDK.shared.conference.history(conferenceID: confID, success: { (json) in
             successCompletion!(json)
         }) { (error) in
-            if error != nil {
-//                failCompletion?(error)
-            }
+            print("Failed to fetch Voxeet conference history with error: \(String(describing: error))")
         }
+    }
+    
+    static func getVoxeetParticipant(identity: LYRIdentity) -> VoxeetParticipant {
+        let name = identity.firstName ?? identity.displayName ?? ""
+        let voxeetParticipant = VoxeetParticipant(id: identity.userID, name: name, avatarURL: identity.avatarImageURL)
+        return voxeetParticipant
     }
 }
