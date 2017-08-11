@@ -1,0 +1,59 @@
+PODS:
+  - Atlas (1.1.1):
+    - LayerKit (>= 0.26.5)
+  - ClusterPrePermissions (0.8.1)
+  - Expecta (1.0.6)
+  - GoogleFontsiOS/Core (0.1.1)
+  - GoogleFontsiOS/SourceSansPro (0.1.1):
+    - GoogleFontsiOS/Core
+  - KIF (3.5.2):
+    - KIF/Core (= 3.5.2)
+  - KIF/Core (3.5.2)
+  - KIFViewControllerActions (1.0.2):
+    - KIF (>= 2.0.0)
+  - LayerKit (0.26.9)
+  - LayerKitDiagnostics (1.0.0):
+    - LayerKit (>= 0.22.0)
+  - LYRCountDownLatch (0.9.0)
+  - OCMock (3.4)
+  - SVProgressHUD (2.1.2)
+
+DEPENDENCIES:
+  - Atlas (from `Libraries/Atlas`)
+  - ClusterPrePermissions (~> 0.1)
+  - Expecta
+  - GoogleFontsiOS/SourceSansPro
+  - KIF
+  - KIFViewControllerActions (from `https://github.com/blakewatters/KIFViewControllerActions.git`)
+  - LayerKitDiagnostics
+  - LYRCountDownLatch
+  - OCMock
+  - SVProgressHUD
+
+EXTERNAL SOURCES:
+  Atlas:
+    :path: Libraries/Atlas
+  KIFViewControllerActions:
+    :git: https://github.com/blakewatters/KIFViewControllerActions.git
+
+CHECKOUT OPTIONS:
+  KIFViewControllerActions:
+    :commit: f9bb47771e29adfa0873aff9bc3652587613608e
+    :git: https://github.com/blakewatters/KIFViewControllerActions.git
+
+SPEC CHECKSUMS:
+  Atlas: 16076505d7182862a0400da5520a48a807fc5b43
+  ClusterPrePermissions: 168c127a658e423062550dd9c56fe26042a58bce
+  Expecta: 3b6bd90a64b9a1dcb0b70aa0e10a7f8f631667d5
+  GoogleFontsiOS: 9f4a4f886160d8cb723bd936604b3f6b975f1167
+  KIF: f2a6025bb3f11692df675054a134d43a9ec2d7db
+  KIFViewControllerActions: 923795dc4bd4ca5657841ce7455ce67447693861
+  LayerKit: 73da59418761112a5bbcaf12b1fb39a813cf4886
+  LayerKitDiagnostics: cb0c1ac160ef4028b7d12f969bb46e1affe8a7f1
+  LYRCountDownLatch: 72a444f729ca5a8c6157c0b58f335a44e6702b48
+  OCMock: 35ae71d6a8fcc1b59434d561d1520b9dd4f15765
+  SVProgressHUD: c404a55d78acbeb7ebb78b76d3faf986475a6994
+
+PODFILE CHECKSUM: f5904d7985f887867f93ebe8e2211e412ed6072c
+
+COCOAPODS: 1.1.1

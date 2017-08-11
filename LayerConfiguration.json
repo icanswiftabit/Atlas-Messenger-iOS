@@ -1,0 +1,7 @@
+[
+	{
+		"name": "HappyOrNot",
+		"app_id": "layer:///apps/staging/776a10e2-74d2-11e7-a0e0-873016909d14",
+		"identity_provider_url": "https://happy-or-not-layer.herokuapp.com/authenticate"
+	}
+]
