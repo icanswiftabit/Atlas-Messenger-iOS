@@ -95,7 +95,8 @@ NSString *const ATLMListUsersEndpoint = @"/users.json";
     // This is to support Legacy Identity Provider protocol
     [payload setObject:credentials forKey:@"user"];
     
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:self.baseURL];
+    NSURL* authenticateURL = [NSURL URLWithString: [NSString stringWithFormat: @"%@authenticate", self.baseURL.absoluteString]];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:authenticateURL];
     request.HTTPMethod = @"POST";
     request.HTTPBody = [NSJSONSerialization dataWithJSONObject:payload options:0 error:nil];
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
